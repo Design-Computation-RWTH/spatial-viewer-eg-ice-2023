@@ -1,8 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import * as THREE from "three";
-import { acceleratedRaycast, computeBoundsTree, disposeBoundsTree } from "three-mesh-bvh";
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as BVH from "three-mesh-bvh";
+import { ViewerContextType } from "../../../@types/viewerTypes";
+import { ViewerContext } from "../Core/Context/ViewerContext";
 
 
 // based on: https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_transform.html
@@ -16,12 +20,12 @@ export default function ViewerComponent() {
   const [cameraOrtho, setCameraOrtho] = useState<THREE.OrthographicCamera>();
   const [currentCamera, setCurrentCamera] = useState<THREE.PerspectiveCamera>();
 
-  const [scene, setScene] = useState<THREE.Scene|null>();
+  const {scene, setScene} = useContext(ViewerContext) as ViewerContextType;
   const [renderer, setRenderer] = useState<THREE.Renderer|null>();
   const [control, setControl] = useState<TransformControls|null>();
   const [orbit, setOrbit] = useState<OrbitControls|null>();
 
-  const [selMesh, setSelMesh] = useState<THREE.Mesh>();
+  const {setSelMesh} = useContext(ViewerContext) as ViewerContextType;
 
   // Setting up raycaster & mouse
   const raycaster = new THREE.Raycaster();

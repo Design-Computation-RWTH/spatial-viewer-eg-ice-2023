@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import { createContext, useState } from "react";
-import { IfcViewerAPI } from "web-ifc-viewer";
+import * as THREE from "three";
 
   
 import {ViewerContextType} from "../../../../@types/viewerTypes"
@@ -9,12 +9,16 @@ export const ViewerContext = createContext<ViewerContextType | null>(null);
 
 const ViewerProvider: React.FC<{children: ReactNode}> = ({children}) => {
 
-    const [ifcViewer, setIfcViewer] = useState<IfcViewerAPI| null>();
+    const [scene, setScene] = useState<THREE.Scene | null>();
+    const [selMesh, setSelMesh] = useState<THREE.Mesh | null>();
 
     return (
         <ViewerContext.Provider value={{
-            ifcViewer,
-            setIfcViewer}}>
+            scene,
+            setScene,
+            selMesh,
+            setSelMesh
+            }}>
             {children}
         </ViewerContext.Provider>
     );

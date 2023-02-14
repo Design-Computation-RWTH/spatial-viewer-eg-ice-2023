@@ -1,9 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
-import { IfcViewerAPI } from "web-ifc-viewer";
+import * as THREE from "three";
 
 // @types.viewerTypes.ts
 
 export type ViewerContextType = {
-  ifcViewer: IfcViewerAPI | null;
-  setIfcViewer: Dispatch<SetStateAction<IfcViewerAPI>>;
+  scene: THREE.Scene | null;
+  setScene: Dispatch<SetStateAction<THREE.Scene>>;
+  selMesh: THREE.Mesh | null;
+  setSelMesh: Dispatch<SetStateAction<THREE.Mesh>>;
 };
