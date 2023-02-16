@@ -10,7 +10,6 @@ export function HomeTab() {
 
   useEffect(() => {
     if (selMesh) {
-      console.log(selMesh);
       setMeshName(selMesh.uuid);
     }
   }, [selMesh]);
