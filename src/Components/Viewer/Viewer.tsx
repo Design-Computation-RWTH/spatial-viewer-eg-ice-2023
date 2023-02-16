@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useContext, useEffect, useState } from "react";
+import { memo, useContext, useEffect, useState } from "react";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
@@ -11,16 +11,27 @@ import { ViewerContext } from "../Core/Context/ViewerContext";
 // based on: https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_transform.html
 // example: https://observablehq.com/@vicapow/three-js-transformcontrols-example
 
-export default function ViewerComponent() {
+export const ViewerComponent = memo(() => {
   // Setting up state vars
   const [cameraPersp, setCameraPersp] = useState<THREE.PerspectiveCamera>();
   const [cameraOrtho, setCameraOrtho] = useState<THREE.OrthographicCamera>();
-  const [currentCamera, setCurrentCamera] = useState<THREE.PerspectiveCamera>();
 
-  const { scene, setScene } = useContext(ViewerContext) as ViewerContextType;
-  const [renderer, setRenderer] = useState<THREE.Renderer | null>();
-  const [control, setControl] = useState<TransformControls | null>();
-  const [orbit, setOrbit] = useState<OrbitControls | null>();
+  const {
+    scene,
+    setScene,
+    renderer,
+    setRenderer,
+    currentCamera,
+    setCurrentCamera,
+    reRenderViewer,
+    reparentMesh,
+    control,
+    setControl,
+    orbit,
+    setOrbit,
+    addTransformToMesh,
+    detachControls,
+  } = useContext(ViewerContext) as ViewerContextType;
 
   const { setSelMesh } = useContext(ViewerContext) as ViewerContextType;
 
@@ -34,9 +45,11 @@ export default function ViewerComponent() {
     const canvas = document.getElementById("ifc-viewer-container");
     const width: number = canvas.clientWidth;
     const height: number = canvas.clientHeight;
-    const tRenderer: THREE.WebGLRenderer = new THREE.WebGLRenderer();
+    const tRenderer: THREE.WebGLRenderer = new THREE.WebGLRenderer({
+      alpha: true,
+    });
     tRenderer.setSize(width, height);
-    tRenderer.setClearColor(0xffffff);
+    tRenderer.setClearColor(0x000000, 0);
     document
       .getElementById("ifc-viewer-container")
       .appendChild(tRenderer.domElement);
@@ -76,17 +89,33 @@ export default function ViewerComponent() {
     const material = new THREE.MeshNormalMaterial();
 
     const mesh = new THREE.Mesh(geometry, material);
+    mesh.name = "TestMesh_1";
     const mesh2 = new THREE.Mesh(geometry, material);
+    mesh2.name = "TestMesh_2";
+    const mesh3 = new THREE.Mesh(geometry, material);
+    mesh3.name = "TestMesh_3";
     tScene.add(mesh);
     tScene.add(mesh2);
+    tScene.add(mesh3);
 
     mesh2.translateX(-200);
-    mesh2.translateY(-200);
+    mesh2.translateY(200);
     mesh2.translateZ(-200);
+    mesh2.updateMatrix();
 
-    mesh.attach(mesh2);
+    let Mesh2Pos = new THREE.Vector3();
+    mesh2.getWorldPosition(Mesh2Pos);
 
-    mesh2.translateY(400);
+    mesh3.translateX(-400);
+    mesh3.translateY(400);
+    mesh3.translateZ(-400);
+    mesh3.updateMatrix();
+
+    let Mesh3Pos = new THREE.Vector3();
+    mesh3.getWorldPosition(Mesh3Pos);
+
+    reparentMesh(mesh2, mesh);
+    reparentMesh(mesh3, mesh2);
 
     // Adding a initial dummy control
 
@@ -118,21 +147,24 @@ export default function ViewerComponent() {
 
   // Init the click function listener
   useEffect(() => {
-    window.addEventListener("click", onClick);
+    let canvas: any = null;
+    if (renderer) {
+      canvas = renderer.domElement;
+      canvas.addEventListener("click", onClick);
+    }
     return () => {
-      window.removeEventListener("click", onClick);
+      if (renderer) canvas.removeEventListener("click", onClick);
     };
   }, [control]);
 
   function onClick(event) {
     if (currentCamera) {
-      const bounds = event.target.getBoundingClientRect();
-
-      mouse.x = (event.offsetX / bounds.width) * 2 - 1;
-      mouse.y = -(event.offsetY / bounds.height) * 2 + 1;
+      const canvas = event.target;
+      const x = (event.offsetX / canvas.clientWidth) * 2 - 1;
+      const y = -(event.offsetY / canvas.clientHeight) * 2 + 1;
 
       // Places it on the camera pointing to the mouse
-      raycaster.setFromCamera(mouse, currentCamera);
+      raycaster.setFromCamera({ x, y }, currentCamera);
 
       // Casts a ray
       const intersection = raycaster.intersectObjects(
@@ -141,6 +173,8 @@ export default function ViewerComponent() {
 
       // Filter out ControlPlane if it is hit
       if (intersection.length > 0) {
+        let currentPos = new THREE.Vector3();
+        intersection[0].object.getWorldPosition(currentPos);
         addTransformToMesh(intersection[0].object);
       } else {
         if (control) {
@@ -148,36 +182,6 @@ export default function ViewerComponent() {
         }
       }
     }
-  }
-
-  function addTransformToMesh(selectedMesh: any) {
-    if (control) {
-      detachControls(false);
-    }
-
-    const tControl = new TransformControls(currentCamera, renderer.domElement);
-    tControl.addEventListener("change", () =>
-      renderer.render(scene, currentCamera)
-    );
-
-    tControl.addEventListener("dragging-changed", function (event) {
-      orbit.enabled = !event.value;
-    });
-
-    tControl.attach(selectedMesh);
-    scene.add(tControl);
-    setControl(tControl);
-    setSelMesh(selectedMesh);
-    reRender();
-  }
-
-  // Function for detaching the TransformControl objects
-  function detachControls(rerender: boolean) {
-    control.detach();
-    control.dispose();
-    scene.remove(control);
-    // Only rerender in specific cases
-    if (rerender) reRender();
   }
 
   function onWindowResize() {
@@ -194,12 +198,7 @@ export default function ViewerComponent() {
 
     renderer.setSize(width, height);
 
-    renderer.render(scene, currentCamera);
-  }
-
-  // Function for rerendering the scene
-  function reRender() {
-    renderer.render(scene, currentCamera);
+    reRenderViewer();
   }
 
   return (
@@ -207,4 +206,4 @@ export default function ViewerComponent() {
       {/* <input type="file" name="load" id="file-input" /> */}
     </div>
   );
-}
+});
