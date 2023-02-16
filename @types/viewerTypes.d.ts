@@ -18,6 +18,8 @@ export type ViewerContextType = {
   setControl: Dispatch<SetStateAction<TransformControls>>;
   orbit: OrbitControls | null;
   setOrbit: Dispatch<SetStateAction<OrbitControls>>;
+  renderTree: string | null;
+  setRenderTree: Dispatch<SetStateAction<string>>;
   reRenderViewer: () => void;
   reparentMesh: (
     childObject: THREE.Object3D,

@@ -14,6 +14,7 @@ import {
 } from "tabler-icons-react";
 import * as THREE from "three";
 import { TreeButton } from "../../Buttons/TreeButtons/TreeButton";
+import { NodeButtonShow } from "../../Buttons/TreeButtons/NodeButtonShow";
 
 // Defining Tree type
 export type TreeData = {
@@ -26,7 +27,7 @@ export type TreeData = {
 
 // Component for creating a tree view representing the scene graph
 export function MyTreeView() {
-  const { scene, reRenderViewer, reparentMesh } = useContext(
+  const { scene, reRenderViewer, reparentMesh, renderTree } = useContext(
     ViewerContext
   ) as ViewerContextType;
 
@@ -35,6 +36,7 @@ export function MyTreeView() {
     {
       id: "Root",
       name: "Root",
+      type: "Root",
       children: [],
     },
   ]);
@@ -46,10 +48,20 @@ export function MyTreeView() {
   useEffect(() => {
     if (scene) {
       let tTreeView: any[] = [];
+      console.log("Render Tree");
       tTreeView.push(convertToTree());
       setTreeView(tTreeView);
     }
   }, [scene]);
+
+  useEffect(() => {
+    if (scene) {
+      let tTreeView: any[] = [];
+      console.log("Render Tree");
+      tTreeView.push(convertToTree());
+      setTreeView(tTreeView);
+    }
+  }, [renderTree]);
 
   // Function for converting the scene graph to a tree for the tree view
   function convertToTree() {
@@ -182,13 +194,13 @@ export function MyTreeView() {
 // Defines the appearance and functionality of the individual nodes
 function Node({ node, style, dragHandle }: NodeRendererProps<TreeData>) {
   const { scene } = useContext(ViewerContext) as ViewerContextType;
-  let object: THREE.Object3D | null = null;
 
+  let object: THREE.Object3D | null = null;
   if (scene) object = scene.getObjectById(parseInt(node.data.id));
 
   return (
     <div ref={dragHandle} style={style}>
-      <Group spacing="xs">
+      <Group style={{ flexWrap: "nowrap" }} spacing="xs">
         <FolderArrow node={node} />
         <TreeButton object3D={object} buttonText={node.data.name}></TreeButton>
       </Group>
@@ -198,6 +210,11 @@ function Node({ node, style, dragHandle }: NodeRendererProps<TreeData>) {
 
 // Styling for the appearance if the node has chidlren
 function FolderArrow({ node }: { node: NodeApi<TreeData> }) {
+  const { scene } = useContext(ViewerContext) as ViewerContextType;
+
+  let object: THREE.Object3D | null = null;
+  if (scene) object = scene.getObjectById(parseInt(node.data.id));
+
   let icon;
   let caret;
   if (node.isOpen && node.data.children.length > 0)
@@ -222,7 +239,8 @@ function FolderArrow({ node }: { node: NodeApi<TreeData> }) {
   return (
     <Group spacing="xs" style={{ gap: "0px" }}>
       {caret}
-      {icon}
+      <NodeButtonShow object3D={object} node={node} />
+      {/* <ActionIcon >{icon}</ActionIcon> */}
     </Group>
   );
 }

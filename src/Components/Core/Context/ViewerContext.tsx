@@ -16,6 +16,7 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     useState<THREE.PerspectiveCamera | null>();
   const [control, setControl] = useState<TransformControls | null>();
   const [orbit, setOrbit] = useState<OrbitControls | null>();
+  const [renderTree, setRenderTree] = useState<string | null>();
 
   function reRenderViewer() {
     renderer.render(scene, currentCamera);
@@ -27,24 +28,44 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     parentObject: THREE.Object3D
   ) {
     let currentWorldPos = new THREE.Vector3();
+    let currentWorldScale = new THREE.Vector3();
+    let currentWorldQuaternion = new THREE.Quaternion();
+
     childObject.getWorldPosition(currentWorldPos); // get original world position
-    //childObject.parent.remove(childObject);
+    childObject.getWorldScale(currentWorldScale); // get original world scale
+    childObject.getWorldQuaternion(currentWorldQuaternion); // get original world quaternion
 
-    // reparent the object
-    parentObject.add(childObject);
-    childObject.updateMatrix();
-    let newWorldPos = new THREE.Vector3();
-    childObject.getWorldPosition(newWorldPos); // get new world position
+    parentObject.add(childObject); // reparent the object
 
-    // calculate the difference between the original and new positions
-    const posDiff = new THREE.Vector3();
-    posDiff.subVectors(currentWorldPos, newWorldPos);
+    // apply the original world position, scale, and quaternion to the child's local transform
+    childObject.position.setFromMatrixPosition(childObject.matrixWorld);
+    childObject.scale.setFromMatrixScale(childObject.matrixWorld);
+    childObject.quaternion.setFromRotationMatrix(childObject.matrixWorld);
 
-    // apply the difference to the object's local position
-    childObject.position.add(posDiff);
-    // update the object's matrix so it reflects the new position
+    // apply the difference between the original and new parent transform to the child's local transform
+    childObject.applyMatrix4(parentObject.matrixWorld.invert());
+
+    // update the child's matrix and parent's matrix
     childObject.updateMatrix();
     parentObject.updateMatrix();
+
+    //childObject.parent.remove(childObject);
+
+    // // reparent the object
+    // parentObject.add(childObject);
+    // childObject.updateMatrix();
+    // let newWorldPos = new THREE.Vector3();
+    // childObject.getWorldPosition(newWorldPos); // get new world position
+
+    // // calculate the difference between the original and new positions
+    // const posDiff = new THREE.Vector3();
+    // posDiff.subVectors(currentWorldPos, newWorldPos);
+
+    // // apply the difference to the object's local position
+    // childObject.position.add(posDiff);
+    // // update the object's matrix so it reflects the new position
+    // childObject.updateMatrix();
+    // parentObject.updateMatrix();
   }
 
   function addTransformToMesh(selectedMesh: any) {
@@ -92,6 +113,8 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setControl,
         orbit,
         setOrbit,
+        renderTree,
+        setRenderTree,
         reRenderViewer,
         reparentMesh,
         addTransformToMesh,

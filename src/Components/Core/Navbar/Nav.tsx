@@ -1,5 +1,11 @@
 import { ActionIcon, Navbar } from "@mantine/core";
-import { BinaryTree, Eyeglass, Hexagon3d, Home } from "tabler-icons-react";
+import {
+  BinaryTree,
+  Eyeglass,
+  Hexagon3d,
+  Home,
+  Upload,
+} from "tabler-icons-react";
 import { HomeTab } from "./HomeTab";
 import { Tabs } from "@mantine/core";
 import { DetailsTab } from "./DetailsTab";
@@ -26,7 +32,7 @@ export function CoreNavbar() {
               <BinaryTree />
             </Tabs.Tab>
             <Tabs.Tab value="home">
-              <Home />
+              <Upload />
             </Tabs.Tab>
             <Tabs.Tab value="settings">
               <Hexagon3d />
@@ -36,7 +42,7 @@ export function CoreNavbar() {
           <Tabs.Panel value="details" style={{ paddingLeft: 10 }}>
             <DetailsTab />
           </Tabs.Panel>
-          <Tabs.Panel value="gallery" style={{ paddingLeft: 10 }}>
+          <Tabs.Panel value="home" style={{ paddingLeft: 10 }}>
             <HomeTab />
           </Tabs.Panel>
           <Tabs.Panel value="settings" style={{ paddingLeft: 10 }}>
