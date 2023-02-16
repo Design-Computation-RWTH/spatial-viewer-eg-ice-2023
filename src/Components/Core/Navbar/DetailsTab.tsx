@@ -5,7 +5,7 @@ import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 
 export function DetailsTab() {
-  const { scene, selMesh } = useContext(ViewerContext) as ViewerContextType;
+  const { selMesh } = useContext(ViewerContext) as ViewerContextType;
 
   const [mesh, setMesh] = useState<any>({
     name: "",

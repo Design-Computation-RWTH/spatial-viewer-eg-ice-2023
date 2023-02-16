@@ -1,15 +1,7 @@
-import {
-  ActionIcon,
-  Button,
-  Chip,
-  Group,
-  Space,
-  Text,
-  UnstyledButton,
-} from "@mantine/core";
-import { Children, EventHandler, useContext, useEffect, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { ActionIcon, Group, Space } from "@mantine/core";
+import { useContext, useEffect, useState } from "react";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
-import TreeView, { flattenTree, INode } from "react-accessible-treeview";
 import * as Arborist from "react-arborist";
 import { ViewerContext } from "../Context/ViewerContext";
 import { NodeApi, NodeRendererProps } from "react-arborist";
@@ -34,8 +26,9 @@ export type TreeData = {
 
 // Component for creating a tree view representing the scene graph
 export function MyTreeView() {
-  const { scene, selMesh, setSelMesh, reRenderViewer, reparentMesh } =
-    useContext(ViewerContext) as ViewerContextType;
+  const { scene, reRenderViewer, reparentMesh } = useContext(
+    ViewerContext
+  ) as ViewerContextType;
 
   // State for the internal tree view data
   const [treeView, setTreeView] = useState<TreeData[]>([
@@ -45,7 +38,6 @@ export function MyTreeView() {
       children: [],
     },
   ]);
-  const [checked, setChecked] = useState(false);
 
   // useEffect for updating the tree view
   useEffect(() => {}, [treeView]);

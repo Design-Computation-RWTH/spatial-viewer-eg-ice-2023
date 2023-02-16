@@ -1,4 +1,5 @@
-import { Button, Text, Title } from "@mantine/core";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { Button, Text } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import * as THREE from "three";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
@@ -10,8 +11,9 @@ interface TreeButtonProps {
 }
 
 export function TreeButton(props: TreeButtonProps) {
-  const { selMesh, setSelMesh, addTransformToMesh, detachControls } =
-    useContext(ViewerContext) as ViewerContextType;
+  const { selMesh, addTransformToMesh } = useContext(
+    ViewerContext
+  ) as ViewerContextType;
 
   const [selected, setSelected] = useState<boolean>(false);
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import { memo, useContext, useEffect, useState } from "react";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
@@ -27,7 +28,6 @@ export const ViewerComponent = memo(() => {
     reparentMesh,
     control,
     setControl,
-    orbit,
     setOrbit,
     addTransformToMesh,
     detachControls,
