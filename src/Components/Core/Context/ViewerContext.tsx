@@ -17,6 +17,7 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [control, setControl] = useState<TransformControls | null>();
   const [orbit, setOrbit] = useState<OrbitControls | null>();
   const [renderTree, setRenderTree] = useState<string | null>();
+  const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
 
   function reRenderViewer() {
     renderer.render(scene, currentCamera);
@@ -113,6 +114,8 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setControl,
         orbit,
         setOrbit,
+        canvas,
+        setCanvas,
         renderTree,
         setRenderTree,
         reRenderViewer,

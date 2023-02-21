@@ -18,6 +18,8 @@ export type ViewerContextType = {
   setControl: Dispatch<SetStateAction<TransformControls>>;
   orbit: OrbitControls | null;
   setOrbit: Dispatch<SetStateAction<OrbitControls>>;
+  canvas: HTMLCanvasElement | null;
+  setCanvas: Dispatch<SetStateAction<HTMLCanvasElement>>;
   renderTree: string | null;
   setRenderTree: Dispatch<SetStateAction<string>>;
   reRenderViewer: () => void;

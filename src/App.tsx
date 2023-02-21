@@ -27,6 +27,9 @@ export default function App() {
         withGlobalStyles
         withNormalizeCSS
       >
+        <header>
+          <title>spatial-viewer</title>
+        </header>
         <ViewerProvider>
           <Shell />
         </ViewerProvider>

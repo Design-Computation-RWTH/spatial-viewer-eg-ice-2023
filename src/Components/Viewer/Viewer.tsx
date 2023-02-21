@@ -28,12 +28,11 @@ export const ViewerComponent = memo(() => {
     reparentMesh,
     control,
     setControl,
+    orbit,
     setOrbit,
     addTransformToMesh,
     detachControls,
   } = useContext(ViewerContext) as ViewerContextType;
-
-  const { setSelMesh } = useContext(ViewerContext) as ViewerContextType;
 
   // Setting up raycaster & mouse
   const raycaster = new THREE.Raycaster();
@@ -52,7 +51,8 @@ export const ViewerComponent = memo(() => {
     tRenderer.setClearColor(0x000000, 0);
     document
       .getElementById("ifc-viewer-container")
-      .appendChild(tRenderer.domElement);
+      .replaceChildren(tRenderer.domElement);
+    // .appendChild(tRenderer.domElement);
     const aspect: number = width / height;
 
     // Adding Cameras
@@ -66,16 +66,26 @@ export const ViewerComponent = memo(() => {
     );
     const tCurrentCamera = tCameraPersp;
 
-    tCurrentCamera.position.set(1000, 500, 1000);
-    tCurrentCamera.lookAt(0, 200, 0);
+    tCurrentCamera.position.set(10, 5, 10);
+    tCurrentCamera.lookAt(0, 2, 0);
 
     const tScene = new THREE.Scene();
 
     // Adding a grid and a simple light
-    tScene.add(new THREE.GridHelper(1000, 10, 0x888888, 0x444444));
+    tScene.add(new THREE.GridHelper(100, 100, 0x888888, 0x444444));
     const light = new THREE.DirectionalLight(0xffffff, 2);
-    light.position.set(1, 1, 1);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    light.position.set(10, 10, 10);
+    const lighthelper = new THREE.DirectionalLightHelper(light, 2.5, 0x000000);
+    lighthelper.name = "Lighthelper";
+
+    tScene.add(lighthelper);
     tScene.add(light);
+    tScene.add(ambientLight);
+
+    const axesHelper = new THREE.AxesHelper(5);
+
+    tScene.add(axesHelper);
 
     // Adding Orbit Controls
     const tOrbit = new OrbitControls(tCurrentCamera, tRenderer.domElement);
@@ -85,7 +95,7 @@ export const ViewerComponent = memo(() => {
     );
 
     // Creating testing geometry and material
-    const geometry = new THREE.BoxGeometry(200, 200, 200);
+    const geometry = new THREE.BoxGeometry(2, 2, 2);
     const material = new THREE.MeshNormalMaterial();
 
     const mesh = new THREE.Mesh(geometry, material);
@@ -98,24 +108,30 @@ export const ViewerComponent = memo(() => {
     tScene.add(mesh2);
     tScene.add(mesh3);
 
-    mesh2.translateX(-200);
-    mesh2.translateY(200);
-    mesh2.translateZ(-200);
+    mesh.translateX(-0.5);
+    mesh.translateY(0);
+    mesh.translateZ(-3);
+    mesh.updateMatrix();
+
+    mesh2.translateX(-2);
+    mesh2.translateY(2);
+    mesh2.translateZ(-2);
     mesh2.updateMatrix();
 
-    let Mesh2Pos = new THREE.Vector3();
-    mesh2.getWorldPosition(Mesh2Pos);
-
-    mesh3.translateX(-400);
-    mesh3.translateY(400);
-    mesh3.translateZ(-400);
-    mesh3.updateMatrix();
-
-    let Mesh3Pos = new THREE.Vector3();
-    mesh3.getWorldPosition(Mesh3Pos);
+    // mesh3.translateX(-4);
+    // mesh3.translateY(4);
+    // mesh3.translateZ(-4);
+    // mesh3.updateMatrix();
 
     reparentMesh(mesh2, mesh);
     reparentMesh(mesh3, mesh2);
+
+    // Since the mesh is set to 0,0,0 when created we need to multiply the matrixes with the parent matrix in order to set it to the correct (relative) location
+    let m1 = new THREE.Matrix4();
+    m1.elements = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2, 2, -2, 1];
+    m1.multiplyMatrices(m1, mesh2.matrix);
+    mesh3.applyMatrix4(m1);
+    mesh3.updateMatrix();
 
     // Adding a initial dummy control
 
@@ -147,13 +163,13 @@ export const ViewerComponent = memo(() => {
 
   // Init the click function listener
   useEffect(() => {
-    let canvas: any = null;
+    let tCanvas: HTMLCanvasElement;
     if (renderer) {
-      canvas = renderer.domElement;
-      canvas.addEventListener("click", onClick);
+      tCanvas = renderer.domElement;
+      tCanvas.addEventListener("click", onClick);
     }
     return () => {
-      if (renderer) canvas.removeEventListener("click", onClick);
+      if (renderer) tCanvas.removeEventListener("click", onClick);
     };
   }, [control]);
 

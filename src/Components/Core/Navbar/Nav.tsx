@@ -1,6 +1,7 @@
 import { ActionIcon, Navbar } from "@mantine/core";
 import {
   BinaryTree,
+  ChartDots3,
   Eyeglass,
   Hexagon3d,
   Home,
@@ -35,7 +36,7 @@ export function CoreNavbar() {
               <Upload />
             </Tabs.Tab>
             <Tabs.Tab value="settings">
-              <Hexagon3d />
+              <ChartDots3 />
             </Tabs.Tab>
           </Tabs.List>
 

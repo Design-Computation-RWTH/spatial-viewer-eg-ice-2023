@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ActionIcon } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { GridDots, Hexagon3d, Lamp } from "tabler-icons-react";
+import {
+  GridDots,
+  Hexagon3d,
+  Lamp,
+  Line,
+  ThreeDCubeSphere,
+} from "tabler-icons-react";
 import * as THREE from "three";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
 import { ViewerContext } from "../../Core/Context/ViewerContext";
@@ -24,7 +30,6 @@ export function NodeButtonShow(props: NodeButtonShowProps) {
       let object;
       if (props.object3D) {
         object = scene.getObjectById(props.object3D.id);
-        console.log("Visibility: ", object.visible);
         setSelected(!object.visible);
       }
     }
@@ -33,16 +38,16 @@ export function NodeButtonShow(props: NodeButtonShowProps) {
   function onSelect(event) {
     if (scene.getObjectById(props.object3D.id)) {
       let object = scene.getObjectById(props.object3D.id);
-      console.log("hide?", object.visible);
       object.visible = !object.visible;
       reRenderViewer();
     }
   }
   let icon;
-  console.log(props.node.data.type);
-  if (props.node.data.type === "Mesh") icon = <Hexagon3d />;
+  if (props.node.data.type === "Mesh") icon = <ThreeDCubeSphere />;
   else if (props.node.data.type === "GridHelper") icon = <GridDots />;
   else if (props.node.data.type === "DirectionalLight") icon = <Lamp />;
+  else if (props.node.data.name === "Lighthelper") icon = <Lamp />;
+  else if (props.node.data.type === "Line") icon = <Line />;
 
   return props.node.data.type === undefined ? (
     <></>
