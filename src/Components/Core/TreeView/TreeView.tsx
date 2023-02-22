@@ -5,13 +5,7 @@ import { ViewerContextType } from "../../../../@types/viewerTypes";
 import * as Arborist from "react-arborist";
 import { ViewerContext } from "../Context/ViewerContext";
 import { NodeApi, NodeRendererProps } from "react-arborist";
-import {
-  CaretDown,
-  CaretRight,
-  GridDots,
-  Hexagon3d,
-  Lamp,
-} from "tabler-icons-react";
+import { CaretDown, CaretRight } from "tabler-icons-react";
 import * as THREE from "three";
 import { TreeButton } from "../../Buttons/TreeButtons/TreeButton";
 import { NodeButtonShow } from "../../Buttons/TreeButtons/NodeButtonShow";
@@ -215,7 +209,6 @@ function FolderArrow({ node }: { node: NodeApi<TreeData> }) {
   let object: THREE.Object3D | null = null;
   if (scene) object = scene.getObjectById(parseInt(node.data.id));
 
-  let icon;
   let caret;
   if (node.isOpen && node.data.children.length > 0)
     caret = (
@@ -233,9 +226,6 @@ function FolderArrow({ node }: { node: NodeApi<TreeData> }) {
     caret = (
       <Space style={{ paddingRight: "20px", marginRight: "5px" }} w="xl" />
     );
-  if (node.data.type === "Mesh") icon = <Hexagon3d />;
-  else if (node.data.type === "GridHelper") icon = <GridDots />;
-  else if (node.data.type === "DirectionalLight") icon = <Lamp />;
   return (
     <Group spacing="xs" style={{ gap: "0px" }}>
       {caret}

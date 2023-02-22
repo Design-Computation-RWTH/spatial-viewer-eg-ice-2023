@@ -75,12 +75,16 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
 
     const tControl = new TransformControls(currentCamera, renderer.domElement);
-    tControl.addEventListener("change", () =>
-      renderer.render(scene, currentCamera)
-    );
+    tControl.addEventListener("change", () => {
+      renderer.render(scene, currentCamera);
+    });
 
     tControl.addEventListener("dragging-changed", function (event) {
       orbit.enabled = !event.value;
+      console.log(event.value);
+      if (!event.value) {
+        console.log("new matrix", selectedMesh.matrix);
+      }
     });
 
     tControl.attach(selectedMesh);

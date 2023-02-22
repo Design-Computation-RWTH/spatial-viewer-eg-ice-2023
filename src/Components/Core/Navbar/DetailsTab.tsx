@@ -1,11 +1,16 @@
-import { ScrollArea, Stack, Table, Title } from "@mantine/core";
+import { Button, Group, ScrollArea, Stack, Table, Title } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
+import { generateUUID } from "three/src/math/MathUtils";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
+import SceneGraphService from "../../../Services/SceneGraphService";
+import { Coordinates } from "../../Coordinates/Coordinates";
 import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 
 export function DetailsTab() {
-  const { selMesh } = useContext(ViewerContext) as ViewerContextType;
+  const { selMesh, scene, reRenderViewer, setRenderTree } = useContext(
+    ViewerContext
+  ) as ViewerContextType;
 
   const [mesh, setMesh] = useState<any>({
     name: "",
@@ -29,51 +34,59 @@ export function DetailsTab() {
     }
   }, [selMesh]);
 
+  async function loadSceneGraph(event) {
+    const scenegraphservice = new SceneGraphService();
+    await scenegraphservice.contructSparqlQuery(scene);
+
+    reRenderViewer();
+    setRenderTree(generateUUID);
+  }
+
   return (
     <Stack style={{ height: "100%", width: "100%" }} justify="space-between">
       <Title order={2}>Scene</Title>
       <ScrollArea style={{ height: "100%", width: "100%" }} type="always">
         <MyTreeView />
       </ScrollArea>
+      <Group>
+        <Button onClick={loadSceneGraph}>Load from Scene Graph</Button>
+        <Button>Update Scene Graph</Button>
+      </Group>
       <Title order={2}>Details</Title>
       <ScrollArea
         style={{ height: "100%", width: "100%" }}
         type="always"
         offsetScrollbars
       >
-        <Table striped highlightOnHover withColumnBorders>
-          <thead>
-            <tr key={"details-table-header"}>
-              <th>Key</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr key={"details-table-name"}>
-              <td>Name</td>
-              <td>{mesh.name}</td>
-            </tr>
-            <tr key={"details-table-id"}>
-              <td>ID</td>
-              <td>{mesh.id}</td>
-            </tr>
-            <tr key={"details-table-uuid"}>
-              <td>UUID</td>
-              <td>{mesh.uuid}</td>
-            </tr>
-            <tr key={"details-table-type"}>
-              <td>Type</td>
-              <td>{mesh.type}</td>
-            </tr>
-            <tr key={"details-table-position"}>
-              <td>Position</td>
-              <td>
-                {mesh.position.x.toFixed(2)},{mesh.position.y.toFixed(2)},
-                {mesh.position.z.toFixed(2)}
-              </td>
-            </tr>
-          </tbody>
-        </Table>
+        <Stack>
+          <Coordinates />
+          <Table striped highlightOnHover withColumnBorders>
+            <thead>
+              <tr key={"details-table-header"}>
+                <th>Key</th>
+                <th>Value</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr key={"details-table-name"}>
+                <td>Name</td>
+                <td>{mesh.name}</td>
+              </tr>
+              <tr key={"details-table-id"}>
+                <td>ID</td>
+                <td>{mesh.id}</td>
+              </tr>
+              <tr key={"details-table-uuid"}>
+                <td>UUID</td>
+                <td>{mesh.uuid}</td>
+              </tr>
+              <tr key={"details-table-type"}>
+                <td>Type</td>
+                <td>{mesh.type}</td>
+              </tr>
+            </tbody>
+          </Table>
+        </Stack>
       </ScrollArea>
     </Stack>
   );
