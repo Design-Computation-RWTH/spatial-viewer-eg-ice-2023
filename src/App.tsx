@@ -3,6 +3,7 @@ import {
   ColorSchemeProvider,
   MantineProvider,
 } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 import { useLocalStorage } from "@mantine/hooks";
 import { Shell } from "./Components/Core/Shell";
 import ViewerProvider from "./Components/Core/Context/ViewerContext";
@@ -34,9 +35,11 @@ export default function App() {
         withGlobalStyles
         withNormalizeCSS
       >
-        <header>
-          <title>spatial-viewer</title>
-        </header>
+        <NotificationsProvider>
+          <header>
+            <title>spatial-viewer</title>
+          </header>
+        </NotificationsProvider>
         <ViewerProvider>
           <Shell />
         </ViewerProvider>

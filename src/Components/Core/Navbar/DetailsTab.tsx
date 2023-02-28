@@ -6,6 +6,8 @@ import SceneGraphService from "../../../Services/SceneGraphService";
 import { Coordinates } from "../../Coordinates/Coordinates";
 import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
+import { showNotification, updateNotification } from "@mantine/notifications";
+import { CircleCheck } from "tabler-icons-react";
 
 export function DetailsTab() {
   const { selMesh, scene, reRenderViewer, setRenderTree, getChangedDocument } =
@@ -34,8 +36,28 @@ export function DetailsTab() {
   }, [selMesh]);
 
   async function loadSceneGraph(event) {
+    showNotification({
+      id: "load-graph",
+      loading: true,
+      title: "Loading your Graph",
+      message:
+        "Loading the spatial representations from the graph. This may take a while",
+      autoClose: false,
+      disallowClose: true,
+    });
+
     const scenegraphservice = new SceneGraphService();
     await scenegraphservice.getAllSceneGraphActors(scene);
+
+    updateNotification({
+      id: "load-graph",
+      color: "teal",
+      title: "Data was loaded",
+      message:
+        "Notification will close in 2 seconds, you can close this notification now",
+      icon: <CircleCheck size={16} />,
+      autoClose: 2000,
+    });
 
     reRenderViewer();
     setRenderTree(generateUUID);
@@ -48,9 +70,29 @@ export function DetailsTab() {
   }
 
   async function updateDocument(event) {
-    let sgs = new SceneGraphService();
-    await sgs.updateSceneGraphActor(selMesh);
-    reRenderViewer();
+    if (selMesh) {
+      let sgs = new SceneGraphService();
+      showNotification({
+        id: "update-representation",
+        loading: true,
+        title: "Updating spatial representation",
+        message:
+          "Updating spatial representation to the graph. This may take a while",
+        autoClose: false,
+        disallowClose: true,
+      });
+      await sgs.updateSceneGraphActor(selMesh);
+      updateNotification({
+        id: "update-representation",
+        color: "teal",
+        title: "Data was updated",
+        message:
+          "Notification will close in 2 seconds, you can close this notification now",
+        icon: <CircleCheck size={16} />,
+        autoClose: 2000,
+      });
+      reRenderViewer();
+    }
   }
 
   return (
