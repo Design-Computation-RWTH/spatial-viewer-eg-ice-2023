@@ -19,6 +19,7 @@ export function HomeTab() {
 
   useEffect(() => {
     if (imageFile) {
+      console.log(imageFile);
       const fileURL = URL.createObjectURL(imageFile);
       const textureLoader = new THREE.TextureLoader();
       const texture = textureLoader.load(fileURL);

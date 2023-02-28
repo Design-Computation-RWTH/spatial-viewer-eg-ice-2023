@@ -3,8 +3,12 @@ import { createContext, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { generateUUID } from "three/src/math/MathUtils";
 
-import { ViewerContextType } from "../../../../@types/viewerTypes";
+import {
+  ChangedDocument,
+  ViewerContextType,
+} from "../../../../@types/viewerTypes";
 
 export const ViewerContext = createContext<ViewerContextType | null>(null);
 
@@ -18,6 +22,9 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [orbit, setOrbit] = useState<OrbitControls | null>();
   const [renderTree, setRenderTree] = useState<string | null>();
   const [canvas, setCanvas] = useState<HTMLCanvasElement | null>();
+  const [changedDocuments, setChangedDocuments] = useState<ChangedDocument[]>(
+    []
+  );
 
   function reRenderViewer() {
     renderer.render(scene, currentCamera);
@@ -69,21 +76,54 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     // parentObject.updateMatrix();
   }
 
+  function getChangedDocument(uri: string): ChangedDocument {
+    let document: ChangedDocument | null = null;
+    if (changedDocuments != null) {
+      changedDocuments.find((child) => {
+        if (child.uri === uri) document = child;
+      });
+    }
+    return document;
+  }
+
+  function addChangedDocument(
+    documentURI: string,
+    documentMatrix: THREE.Matrix4
+  ) {
+    if (getChangedDocument(documentURI) === null) {
+      let tChangedDocuments = changedDocuments;
+      tChangedDocuments.push({
+        uri: documentURI,
+        initialLocation: documentMatrix,
+      });
+      setChangedDocuments(tChangedDocuments);
+      setRenderTree(generateUUID);
+    } else {
+      setRenderTree(generateUUID);
+    }
+  }
+
   function addTransformToMesh(selectedMesh: any) {
     if (control) {
       detachControls(false);
     }
+    let initTransform: THREE.Matrix4 = selectedMesh.matrix;
 
     const tControl = new TransformControls(currentCamera, renderer.domElement);
-    tControl.addEventListener("change", () => {
+    tControl.addEventListener("change", (event) => {
       renderer.render(scene, currentCamera);
+    });
+
+    tControl.addEventListener("mouseUp", (event) => {
+      console.log(event);
+      addChangedDocument(selectedMesh.uuid, initTransform);
     });
 
     tControl.addEventListener("dragging-changed", function (event) {
       orbit.enabled = !event.value;
-      console.log(event.value);
+      console.log(selectedMesh);
       if (!event.value) {
-        console.log("new matrix", selectedMesh.matrix);
+        // console.log("new matrix", selectedMesh.matrix);
       }
     });
 
@@ -120,12 +160,16 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setOrbit,
         canvas,
         setCanvas,
+        changedDocuments,
+        setChangedDocuments,
+        getChangedDocument,
         renderTree,
         setRenderTree,
         reRenderViewer,
         reparentMesh,
         addTransformToMesh,
         detachControls,
+        addChangedDocument,
       }}
     >
       {children}

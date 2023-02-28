@@ -11,17 +11,29 @@ interface TreeButtonProps {
 }
 
 export function TreeButton(props: TreeButtonProps) {
-  const { selMesh, addTransformToMesh } = useContext(
+  const { selMesh, addTransformToMesh, getChangedDocument } = useContext(
     ViewerContext
   ) as ViewerContextType;
 
   const [selected, setSelected] = useState<boolean>(false);
+  const [italic, setItalic] = useState<string>("");
+  const [bold, setBold] = useState<number>(0);
+  const [star, setStar] = useState<string>("");
 
   useEffect(() => {}, [selected]);
 
   useEffect(() => {
     if (selMesh === props.object3D) {
       setSelected(true);
+      if (getChangedDocument(selMesh.uuid) != null) {
+        setItalic("italic");
+        setBold(2000);
+        setStar(" *");
+      } else {
+        setItalic("");
+        setBold(0);
+        setStar("");
+      }
     } else {
       setSelected(false);
     }
@@ -39,7 +51,10 @@ export function TreeButton(props: TreeButtonProps) {
       color={"gray"}
       compact
     >
-      <Text>{props.buttonText}</Text>
+      <Text fs={italic} fw={bold}>
+        {props.buttonText}
+        {star}
+      </Text>
     </Button>
   );
 }

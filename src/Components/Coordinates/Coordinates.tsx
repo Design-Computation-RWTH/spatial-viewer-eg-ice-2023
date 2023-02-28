@@ -5,7 +5,7 @@ import { ViewerContext } from "../Core/Context/ViewerContext";
 import { ViewerContextType } from "../../../@types/viewerTypes";
 
 export function Coordinates() {
-  const { selMesh, reRenderViewer } = useContext(
+  const { selMesh, reRenderViewer, addChangedDocument } = useContext(
     ViewerContext
   ) as ViewerContextType;
 
@@ -18,40 +18,49 @@ export function Coordinates() {
   const [scale, setScale] = useState<THREE.Vector3>(new THREE.Vector3(1, 1, 1));
 
   function setXPos(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.position.setX(val);
     reRenderViewer();
   }
   function setYPos(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.position.setY(val);
     reRenderViewer();
   }
   function setZPos(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.position.setZ(val);
     reRenderViewer();
   }
 
   function setXRot(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.rotation.x = (val * Math.PI) / 180;
     reRenderViewer();
   }
   function setYRot(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.rotation.y = (val * Math.PI) / 180;
     reRenderViewer();
   }
   function setZRot(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.rotation.z = (val * Math.PI) / 180;
     reRenderViewer();
   }
 
   function setXSca(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.scale.setX(val);
     reRenderViewer();
   }
   function setYSca(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.scale.setY(val);
     reRenderViewer();
   }
   function setZSca(val) {
+    addChangedDocument(selMesh.uuid, selMesh.matrix);
     selMesh.scale.setZ(val);
     reRenderViewer();
   }

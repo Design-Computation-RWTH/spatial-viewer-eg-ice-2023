@@ -224,9 +224,5 @@ export const ViewerComponent = memo(() => {
     reRenderViewer();
   }
 
-  return (
-    <div style={{ height: "100%" }} id="ifc-viewer-container">
-      {/* <input type="file" name="load" id="file-input" /> */}
-    </div>
-  );
+  return <div style={{ height: "100%" }} id="ifc-viewer-container"></div>;
 });

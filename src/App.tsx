@@ -6,10 +6,17 @@ import {
 import { useLocalStorage } from "@mantine/hooks";
 import { Shell } from "./Components/Core/Shell";
 import ViewerProvider from "./Components/Core/Context/ViewerContext";
+import { useEffect } from "react";
+import SceneGraphService from "./Services/SceneGraphService";
 
 export default function App() {
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+
+  useEffect(() => {
+    const sgs = new SceneGraphService();
+    sgs.initOxiGraph();
+  }, []);
 
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
     key: "mantine-color-scheme",

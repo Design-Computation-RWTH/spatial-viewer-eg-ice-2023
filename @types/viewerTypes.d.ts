@@ -5,6 +5,11 @@ import { TransformControls } from "three/examples/jsm/controls/TransformControls
 
 // @types.viewerTypes.ts
 
+export interface ChangedDocument {
+  uri: string;
+  initialLocation: THREE.Matrix4;
+}
+
 export type ViewerContextType = {
   scene: THREE.Scene | null;
   setScene: Dispatch<SetStateAction<THREE.Scene>>;
@@ -20,6 +25,9 @@ export type ViewerContextType = {
   setOrbit: Dispatch<SetStateAction<OrbitControls>>;
   canvas: HTMLCanvasElement | null;
   setCanvas: Dispatch<SetStateAction<HTMLCanvasElement>>;
+  changedDocuments: ChangedDocument[] | null;
+  setChangedDocuments: Dispatch<SetStateAction<ChangedDocument[]>>;
+  getChangedDocument: (uri: string) => ChangedDocument;
   renderTree: string | null;
   setRenderTree: Dispatch<SetStateAction<string>>;
   reRenderViewer: () => void;
@@ -29,4 +37,8 @@ export type ViewerContextType = {
   ) => void;
   addTransformToMesh: (selectedMesh: any) => void;
   detachControls: (rerender: boolean) => void;
+  addChangedDocument: (
+    documentURI: string,
+    documentMatrix: THREE.Matrix
+  ) => void;
 };

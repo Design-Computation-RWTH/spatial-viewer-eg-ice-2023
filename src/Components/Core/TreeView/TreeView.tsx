@@ -59,7 +59,9 @@ export function MyTreeView() {
 
   // Function for converting the scene graph to a tree for the tree view
   function convertToTree() {
-    let sceneGraph = scene.children;
+    let sceneGraph = scene.children.filter(
+      (child) => child instanceof THREE.Mesh
+    );
     let tree = {
       id: "Root",
       name: "Root",
@@ -159,6 +161,7 @@ export function MyTreeView() {
       let childObject: THREE.Object3D = scene.getObjectById(
         parseInt(dragNode.id)
       );
+      delete childObject.userData.parent;
       reparentMesh(childObject, scene);
     }
 

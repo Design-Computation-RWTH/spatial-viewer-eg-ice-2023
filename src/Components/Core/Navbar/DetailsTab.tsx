@@ -8,9 +8,8 @@ import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 
 export function DetailsTab() {
-  const { selMesh, scene, reRenderViewer, setRenderTree } = useContext(
-    ViewerContext
-  ) as ViewerContextType;
+  const { selMesh, scene, reRenderViewer, setRenderTree, getChangedDocument } =
+    useContext(ViewerContext) as ViewerContextType;
 
   const [mesh, setMesh] = useState<any>({
     name: "",
@@ -36,10 +35,22 @@ export function DetailsTab() {
 
   async function loadSceneGraph(event) {
     const scenegraphservice = new SceneGraphService();
-    await scenegraphservice.contructSparqlQuery(scene);
+    await scenegraphservice.getAllSceneGraphActors(scene);
 
     reRenderViewer();
     setRenderTree(generateUUID);
+  }
+
+  async function resetDocument(event) {
+    let sgs = new SceneGraphService();
+    // await sgs.getSpecificSceneGraphActor(scene, selMesh.uuid);
+    reRenderViewer();
+  }
+
+  async function updateDocument(event) {
+    let sgs = new SceneGraphService();
+    await sgs.updateSceneGraphActor(selMesh);
+    reRenderViewer();
   }
 
   return (
@@ -48,9 +59,8 @@ export function DetailsTab() {
       <ScrollArea style={{ height: "100%", width: "100%" }} type="always">
         <MyTreeView />
       </ScrollArea>
-      <Group>
+      <Group grow>
         <Button onClick={loadSceneGraph}>Load from Scene Graph</Button>
-        <Button>Update Scene Graph</Button>
       </Group>
       <Title order={2}>Details</Title>
       <ScrollArea
@@ -86,6 +96,8 @@ export function DetailsTab() {
               </tr>
             </tbody>
           </Table>
+          <Button onClick={updateDocument}>Update Document</Button>
+          <Button onClick={resetDocument}>Reset Document</Button>
         </Stack>
       </ScrollArea>
     </Stack>
