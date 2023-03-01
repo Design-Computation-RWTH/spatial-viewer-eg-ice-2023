@@ -1,8 +1,6 @@
-import { Button, Group, ScrollArea, Stack, Table, Title } from "@mantine/core";
+import { Button, ScrollArea, Stack, Table, Title } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { generateUUID } from "three/src/math/MathUtils";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
-import SceneGraphService from "../../../Services/SceneGraphService";
 import { Coordinates } from "../../Coordinates/Coordinates";
 import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
@@ -15,7 +13,9 @@ export function DetailsTab() {
     ViewerContext
   ) as ViewerContextType;
 
-  const {} = useContext(GraphContext) as GraphContextType;
+  const { updateSceneGraphActor } = useContext(
+    GraphContext
+  ) as GraphContextType;
 
   const [mesh, setMesh] = useState<any>({
     name: "",
@@ -39,23 +39,8 @@ export function DetailsTab() {
     }
   }, [selMesh]);
 
-  async function loadSceneGraph(event) {}
-
-  async function dateTest(event) {
-    let sgs = new SceneGraphService();
-    await sgs.getAllDates();
-    reRenderViewer();
-  }
-
-  async function resetDocument(event) {
-    let sgs = new SceneGraphService();
-    // await sgs.getSpecificSceneGraphActor(scene, selMesh.uuid);
-    reRenderViewer();
-  }
-
   async function updateDocument(event) {
     if (selMesh) {
-      let sgs = new SceneGraphService();
       showNotification({
         id: "update-representation",
         loading: true,
@@ -65,7 +50,7 @@ export function DetailsTab() {
         autoClose: false,
         disallowClose: true,
       });
-      await sgs.updateSceneGraphActor(selMesh);
+      await updateSceneGraphActor(selMesh);
       updateNotification({
         id: "update-representation",
         color: "teal",

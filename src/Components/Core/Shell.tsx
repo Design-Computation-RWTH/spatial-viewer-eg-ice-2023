@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect } from "react";
 import {
   ActionIcon,
@@ -11,8 +12,6 @@ import {
 import { CoreNavbar } from "./Navbar/Nav";
 import { ViewerComponent } from "../Viewer/Viewer";
 import { MoonStars, SunHigh } from "tabler-icons-react";
-import { ViewerContextType } from "../../../@types/viewerTypes";
-import { ViewerContext } from "./Context/ViewerContext";
 import { Timeline } from "./Timeline/Timeline";
 import { GraphContext, GraphContextType } from "./Context/GraphContext";
 
@@ -20,9 +19,9 @@ export const Shell = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "light";
 
-  const { setOxiGraph } = useContext(ViewerContext) as ViewerContextType;
-
-  const { initOxi } = useContext(GraphContext) as GraphContextType;
+  const { initOxi, setOxiGraphStore } = useContext(
+    GraphContext
+  ) as GraphContextType;
 
   useEffect(() => {
     initGraph();
@@ -30,7 +29,7 @@ export const Shell = () => {
 
   async function initGraph() {
     let graph = await initOxi();
-    setOxiGraph(graph);
+    setOxiGraphStore(graph);
   }
 
   return (
