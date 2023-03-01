@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import { useContext, useEffect } from "react";
 import {
   ActionIcon,
   AppShell,
@@ -13,8 +13,8 @@ import { ViewerComponent } from "../Viewer/Viewer";
 import { MoonStars, SunHigh } from "tabler-icons-react";
 import { ViewerContextType } from "../../../@types/viewerTypes";
 import { ViewerContext } from "./Context/ViewerContext";
-import SceneGraphService from "../../Services/SceneGraphService";
 import { Timeline } from "./Timeline/Timeline";
+import { GraphContext, GraphContextType } from "./Context/GraphContext";
 
 export const Shell = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -22,13 +22,14 @@ export const Shell = () => {
 
   const { setOxiGraph } = useContext(ViewerContext) as ViewerContextType;
 
+  const { initOxi } = useContext(GraphContext) as GraphContextType;
+
   useEffect(() => {
     initGraph();
   }, []);
 
   async function initGraph() {
-    let sgs = new SceneGraphService();
-    let graph = await sgs.initOxi();
+    let graph = await initOxi();
     setOxiGraph(graph);
   }
 

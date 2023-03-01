@@ -8,10 +8,14 @@ import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { CircleCheck } from "tabler-icons-react";
+import { GraphContext, GraphContextType } from "../Context/GraphContext";
 
 export function DetailsTab() {
-  const { selMesh, scene, reRenderViewer, setRenderTree, getChangedDocument } =
-    useContext(ViewerContext) as ViewerContextType;
+  const { selMesh, reRenderViewer } = useContext(
+    ViewerContext
+  ) as ViewerContextType;
+
+  const {} = useContext(GraphContext) as GraphContextType;
 
   const [mesh, setMesh] = useState<any>({
     name: "",
@@ -35,30 +39,7 @@ export function DetailsTab() {
     }
   }, [selMesh]);
 
-  async function loadSceneGraph(event) {
-    // showNotification({
-    //   id: "load-graph",
-    //   loading: true,
-    //   title: "Loading your Graph",
-    //   message:
-    //     "Loading the spatial representations from the graph. This may take a while",
-    //   autoClose: false,
-    //   disallowClose: true,
-    // });
-    // const scenegraphservice = new SceneGraphService();
-    // await scenegraphservice.getAllSceneGraphActors(scene);
-    // updateNotification({
-    //   id: "load-graph",
-    //   color: "teal",
-    //   title: "Data was loaded",
-    //   message:
-    //     "Notification will close in 2 seconds, you can close this notification now",
-    //   icon: <CircleCheck size={16} />,
-    //   autoClose: 2000,
-    // });
-    // reRenderViewer();
-    // setRenderTree(generateUUID);
-  }
+  async function loadSceneGraph(event) {}
 
   async function dateTest(event) {
     let sgs = new SceneGraphService();
@@ -104,9 +85,6 @@ export function DetailsTab() {
       <ScrollArea style={{ height: "100%", width: "100%" }} type="always">
         <MyTreeView />
       </ScrollArea>
-      <Group grow>
-        <Button onClick={loadSceneGraph}>Load from Scene Graph</Button>
-      </Group>
       <Title order={2}>Details</Title>
       <ScrollArea
         style={{ height: "100%", width: "100%" }}
@@ -142,7 +120,6 @@ export function DetailsTab() {
             </tbody>
           </Table>
           <Button onClick={updateDocument}>Update Document</Button>
-          <Button onClick={dateTest}>Get Dates</Button>
         </Stack>
       </ScrollArea>
     </Stack>

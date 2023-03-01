@@ -265,6 +265,7 @@ export default class SceneGraphService {
   saveGraphToTtl() {
     let dump = repository.dump("text/turtle", oxigraph.defaultGraph());
   }
+
   setTransformFromMatrix(mesh: THREE.Mesh, matrix: THREE.Matrix4) {
     mesh.position.setFromMatrixPosition(matrix);
     mesh.rotation.setFromRotationMatrix(matrix);

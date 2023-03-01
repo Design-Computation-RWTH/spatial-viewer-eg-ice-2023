@@ -1,13 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ActionIcon } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import {
-  GridDots,
-  Hexagon3d,
-  Lamp,
-  Line,
-  ThreeDCubeSphere,
-} from "tabler-icons-react";
+import { GridDots, Lamp, Line, ThreeDCubeSphere } from "tabler-icons-react";
 import * as THREE from "three";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
 import { ViewerContext } from "../../Core/Context/ViewerContext";
@@ -19,7 +13,7 @@ interface NodeButtonShowProps {
 
 //TODO: Fix visibility update!
 export function NodeButtonShow(props: NodeButtonShowProps) {
-  const { scene, selMesh, reRenderViewer } = useContext(
+  const { scene, reRenderViewer } = useContext(
     ViewerContext
   ) as ViewerContextType;
 

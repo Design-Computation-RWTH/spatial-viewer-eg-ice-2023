@@ -9,6 +9,7 @@ import { Shell } from "./Components/Core/Shell";
 import ViewerProvider from "./Components/Core/Context/ViewerContext";
 import { useEffect } from "react";
 import SceneGraphService from "./Services/SceneGraphService";
+import GraphProvider from "./Components/Core/Context/GraphContext";
 
 export default function App() {
   const toggleColorScheme = (value?: ColorScheme) =>
@@ -41,7 +42,9 @@ export default function App() {
           </header>
         </NotificationsProvider>
         <ViewerProvider>
-          <Shell />
+          <GraphProvider>
+            <Shell />
+          </GraphProvider>
         </ViewerProvider>
       </MantineProvider>
     </ColorSchemeProvider>

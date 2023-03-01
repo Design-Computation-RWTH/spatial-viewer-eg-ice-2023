@@ -1,11 +1,22 @@
-import React, { ReactNode, useContext, useEffect, useState } from "react";
-import { ActionIcon, Group, Paper, Slider } from "@mantine/core";
-import { CircleCheck, CloudDownload, TestPipe2 } from "tabler-icons-react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { ReactNode, useContext, useEffect } from "react";
+import { ActionIcon, Group, Menu, Paper, Slider, Text } from "@mantine/core";
+import {
+  ArrowLeftRight,
+  CircleCheck,
+  Menu2,
+  MessageCircle,
+  Photo,
+  Reload,
+  Search,
+  Settings,
+  Trash,
+} from "tabler-icons-react";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { generateUUID } from "three/src/math/MathUtils";
 import { ViewerContext } from "../Context/ViewerContext";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
-import SceneGraphService from "../../../Services/SceneGraphService";
+import { GraphContext, GraphContextType } from "../Context/GraphContext";
 
 interface DatePercentage {
   value: number;
@@ -13,38 +24,37 @@ interface DatePercentage {
 }
 
 export function Timeline() {
-  const { scene, reRenderViewer, setRenderTree, oxiGraph } = useContext(
+  const { reRenderViewer, setRenderTree } = useContext(
     ViewerContext
   ) as ViewerContextType;
 
-  const [dates, setDates] = useState<string[]>([]);
-  const [currentDatePercentage, setCurrentDatePercentage] =
-    useState<number>(100);
-  const [currentDate, setCurrentDate] = useState<Date>();
+  const {
+    getAllDates,
+    getAllSceneGraphActors,
+    setCurrentDate,
+    currentDatePercentage,
+    setCurrentDatePercentage,
+    dates,
+    setDates,
+    oxiGraphStore,
+  } = useContext(GraphContext) as GraphContextType;
 
   useEffect(() => {
     getDates();
-  }, [oxiGraph]);
+    setCurrentDate(new Date(valueLabelFormat(100)));
+  }, [oxiGraphStore]);
 
   useEffect(() => {
     getDates();
   }, [reRenderViewer]);
 
   async function getDates() {
-    console.log("Get Dates!!");
-    let sgs = new SceneGraphService();
-    let tDates = await sgs.getAllDates();
+    let tDates = await getAllDates();
     setDates(tDates);
   }
 
   function setSliderValue(event) {
     setCurrentDatePercentage(event);
-  }
-
-  function testDateValue(event) {
-    let dateString = valueLabelFormat(currentDatePercentage);
-    let toDate = new Date(dateString);
-    console.log(toDate.toISOString());
   }
 
   function normalizeDates(dateStrings: string[]): DatePercentage[] {
@@ -96,8 +106,9 @@ export function Timeline() {
 
       let newDate = new Date(correspondingTime);
       newDateString = newDate.toString();
+      //setCurrentDate(newDate);
     }
-
+    // setCurrentDate(newDateString);
     return newDateString;
   }
 
@@ -110,7 +121,7 @@ export function Timeline() {
     return marks;
   }
 
-  async function loadSceneGraph(event) {
+  async function loadSceneGraph() {
     showNotification({
       id: "load-graph",
       loading: true,
@@ -122,10 +133,10 @@ export function Timeline() {
     });
 
     let dateString = valueLabelFormat(currentDatePercentage);
+
     let toDate = new Date(dateString);
 
-    const scenegraphservice = new SceneGraphService();
-    await scenegraphservice.getAllSceneGraphActors(scene, toDate);
+    await getAllSceneGraphActors(toDate);
 
     getDates();
 
@@ -157,6 +168,40 @@ export function Timeline() {
     >
       <Paper withBorder shadow="xl" radius="xl" p="xl" color="grey">
         <Group>
+          <Menu shadow="md" width={200}>
+            <Menu.Target>
+              <ActionIcon color="blue" size="lg" radius="xl" variant="filled">
+                <Menu2 size={26} />
+              </ActionIcon>
+            </Menu.Target>
+
+            <Menu.Dropdown>
+              <Menu.Label>Application</Menu.Label>
+              <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+              <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
+              <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
+              <Menu.Item
+                icon={<Search size={14} />}
+                rightSection={
+                  <Text size="xs" color="dimmed">
+                    ⌘K
+                  </Text>
+                }
+              >
+                Search
+              </Menu.Item>
+
+              <Menu.Divider />
+
+              <Menu.Label>Danger zone</Menu.Label>
+              <Menu.Item icon={<ArrowLeftRight size={14} />}>
+                Transfer my data
+              </Menu.Item>
+              <Menu.Item color="red" icon={<Trash size={14} />}>
+                Delete my account
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
           <ActionIcon
             onClick={loadSceneGraph}
             color="blue"
@@ -164,16 +209,7 @@ export function Timeline() {
             radius="xl"
             variant="filled"
           >
-            <CloudDownload size={26} />
-          </ActionIcon>
-          <ActionIcon
-            onClick={testDateValue}
-            color="blue"
-            size="lg"
-            radius="xl"
-            variant="filled"
-          >
-            <TestPipe2 size={26} />
+            <Reload size={26} />
           </ActionIcon>
           <Slider
             style={{ width: "80%" }}
