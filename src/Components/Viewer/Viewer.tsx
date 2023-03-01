@@ -25,10 +25,8 @@ export const ViewerComponent = memo(() => {
     currentCamera,
     setCurrentCamera,
     reRenderViewer,
-    reparentMesh,
     control,
     setControl,
-    orbit,
     setOrbit,
     addTransformToMesh,
     detachControls,
@@ -97,47 +95,6 @@ export const ViewerComponent = memo(() => {
     // Creating testing geometry and material
     const geometry = new THREE.BoxGeometry(2, 2, 2);
     const material = new THREE.MeshNormalMaterial();
-
-    // const mesh = new THREE.Mesh(geometry, material);
-    // mesh.name = "TestMesh_1";
-    // const mesh2 = new THREE.Mesh(geometry, material);
-    // mesh2.name = "TestMesh_2";
-    // const mesh3 = new THREE.Mesh(geometry, material);
-    // mesh3.name = "TestMesh_3";
-    // const mesh4 = new THREE.Mesh(geometry, material);
-    // mesh4.name = "TestMesh_4";
-    // const group = new THREE.Group();
-    // group.add(mesh4);
-    // tScene.add(group);
-    // tScene.add(mesh);
-
-    // tScene.add(mesh2);
-    // tScene.add(mesh3);
-
-    // mesh.translateX(-0.5);
-    // mesh.translateY(0);
-    // mesh.translateZ(-3);
-    // mesh.updateMatrix();
-
-    // mesh2.translateX(-2);
-    // mesh2.translateY(2);
-    // mesh2.translateZ(-2);
-    // mesh2.updateMatrix();
-
-    // mesh3.translateX(-4);
-    // mesh3.translateY(4);
-    // mesh3.translateZ(-4);
-    // mesh3.updateMatrix();
-
-    // reparentMesh(mesh2, mesh);
-    // reparentMesh(mesh3, mesh2);
-
-    // Since the mesh is set to 0,0,0 when created we need to multiply the matrixes with the parent matrix in order to set it to the correct (relative) location
-    // let m1 = new THREE.Matrix4();
-    // m1.elements = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -2, 2, -2, 1];
-    // m1.multiplyMatrices(m1, mesh2.matrix);
-    // mesh3.applyMatrix4(m1);
-    // mesh3.updateMatrix();
 
     // Adding a initial dummy control
 

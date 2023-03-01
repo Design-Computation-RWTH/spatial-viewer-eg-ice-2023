@@ -6,56 +6,114 @@ import { generateUUID } from "three/src/math/MathUtils";
 
 let repository: oxigraph.Store;
 
-(async function () {
-  await init(); // Required to compile the WebAssembly code.
-
-  let data: string;
-  repository = new oxigraph.Store();
-  loadFileAsString("../../testgraph.ttl").then((loadData) => {
-    data = loadData;
-    repository.load(
-      data,
-      "text/turtle",
-      "http://example.com/",
-      oxigraph.defaultGraph()
-    );
-  });
-
-  // const dump = await repository.dump("text/turtle", oxigraph.defaultGraph());
-
-  // We can use here Oxigraph methods
-})();
-
-async function loadFileAsString(filePath: string): Promise<string> {
-  const response = await fetch(filePath);
-  const data = await response.text();
-  return data;
-}
-
 export default class SceneGraphService {
   async initOxiGraph() {}
 
-  async getAllSceneGraphActors(scene: THREE.Scene) {
-    const findSpatialActorsQuery = `        
+  async getAllSceneGraphActors(scene: THREE.Scene, date: Date) {
+    const query = `        
     PREFIX sg: <http://example.org/scenegraph#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
     SELECT
         ?s 
     where {
-        ?s a sg:SpatialActor.
+        ?s a sg:SpatialActor;
+          sg:created ?created .
+        
+        FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
     }`;
-    const spatialActorsresults: any[] = await repository.query(
-      findSpatialActorsQuery
-    );
+
+    const spatialActorsresults: any[] = await repository.query(query);
+
+    let ids: string[] = [];
 
     for (let spatialActorResult of spatialActorsresults) {
       spatialActorResult.forEach((value, key) => {
-        this.construcSpatialActor(value.value, scene);
+        ids.push(value.value);
+        this.construcSpatialActor(value.value, scene, date);
       });
+    }
+
+    scene.traverse((child) => {
+      if (child instanceof THREE.Mesh && !ids.includes(child.uuid)) {
+        this.removeMesh(scene, child);
+      }
+    });
+  }
+
+  removeMesh(object, mesh) {
+    if (object.children) {
+      for (let i = object.children.length - 1; i >= 0; i--) {
+        const child = object.children[i];
+        if (child === mesh) {
+          object.remove(child);
+        } else {
+          this.removeMesh(child, mesh);
+        }
+      }
     }
   }
 
-  async construcSpatialActor(spatialActor: string, scene: THREE.Scene) {
+  async initOxi(): Promise<oxigraph.Store> {
+    await init(); // Required to compile the WebAssembly code.
+
+    let data: string;
+    repository = new oxigraph.Store();
+    await this.loadFileAsString("../../testgraph.ttl").then((loadData) => {
+      data = loadData;
+      repository.load(
+        data,
+        "text/turtle",
+        "http://example.com/",
+        oxigraph.defaultGraph()
+      );
+    });
+
+    return repository;
+    // const dump = await repository.dump("text/turtle", oxigraph.defaultGraph());
+
+    // We can use here Oxigraph methods
+  }
+
+  async loadFileAsString(filePath: string): Promise<string> {
+    const response = await fetch(filePath);
+    const data = await response.text();
+    return data;
+  }
+
+  async getAllDates(): Promise<any[]> {
+    let dates = [];
+    if (repository) {
+      const findDatesQuery = `        
+      PREFIX sg: <http://example.org/scenegraph#>
+      PREFIX ex: <http://example.org/ex#>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+      
+      SELECT ?transformation ?created WHERE {
+        ?transformation rdf:type sg:Transformation ;
+                         sg:created ?created ;
+                         sg:targets ex:box1 .
+      } ORDER BY DESC(?created)
+      `;
+      const dateResults: any[] = await repository.query(findDatesQuery);
+
+      for (let date of dateResults) {
+        date.forEach((value, key) => {
+          if (key === "created") {
+            dates.push(value.value);
+          }
+        });
+      }
+    }
+    return dates;
+  }
+
+  async construcSpatialActor(
+    spatialActor: string,
+    scene: THREE.Scene,
+    date: Date
+  ) {
     this.saveGraphToTtl();
     let query = `
     PREFIX sg: <http://example.org/scenegraph#>
@@ -77,11 +135,12 @@ export default class SceneGraphService {
                   sg:targets <${spatialActor}> ;
                   ?transformProp ?transformObj ;
                   sg:created ?created .
+        FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
         FILTER NOT EXISTS {
           ?otherTransform rdf:type sg:Transformation ;
                           sg:targets <${spatialActor}> ;
                           sg:created ?otherCreated .
-          FILTER (?otherCreated > ?created)
+          FILTER (?otherCreated < ?created && ?otherCreated >= "${date.toISOString()}"^^xsd:date)
         }
         BIND(?transform AS ?latestTransform)
         BIND(?created AS ?latestCreated)

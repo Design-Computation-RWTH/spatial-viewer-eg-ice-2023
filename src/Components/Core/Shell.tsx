@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   ActionIcon,
   AppShell,
@@ -11,10 +11,26 @@ import {
 import { CoreNavbar } from "./Navbar/Nav";
 import { ViewerComponent } from "../Viewer/Viewer";
 import { MoonStars, SunHigh } from "tabler-icons-react";
+import { ViewerContextType } from "../../../@types/viewerTypes";
+import { ViewerContext } from "./Context/ViewerContext";
+import SceneGraphService from "../../Services/SceneGraphService";
+import { Timeline } from "./Timeline/Timeline";
 
 export const Shell = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const dark = colorScheme === "light";
+
+  const { setOxiGraph } = useContext(ViewerContext) as ViewerContextType;
+
+  useEffect(() => {
+    initGraph();
+  }, []);
+
+  async function initGraph() {
+    let sgs = new SceneGraphService();
+    let graph = await sgs.initOxi();
+    setOxiGraph(graph);
+  }
 
   return (
     <AppShell
@@ -77,6 +93,7 @@ export const Shell = () => {
     >
       <div style={{ height: "100%", width: "100%" }}>
         <ViewerComponent />
+        <Timeline />
       </div>
     </AppShell>
   );

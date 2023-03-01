@@ -36,31 +36,34 @@ export function DetailsTab() {
   }, [selMesh]);
 
   async function loadSceneGraph(event) {
-    showNotification({
-      id: "load-graph",
-      loading: true,
-      title: "Loading your Graph",
-      message:
-        "Loading the spatial representations from the graph. This may take a while",
-      autoClose: false,
-      disallowClose: true,
-    });
+    // showNotification({
+    //   id: "load-graph",
+    //   loading: true,
+    //   title: "Loading your Graph",
+    //   message:
+    //     "Loading the spatial representations from the graph. This may take a while",
+    //   autoClose: false,
+    //   disallowClose: true,
+    // });
+    // const scenegraphservice = new SceneGraphService();
+    // await scenegraphservice.getAllSceneGraphActors(scene);
+    // updateNotification({
+    //   id: "load-graph",
+    //   color: "teal",
+    //   title: "Data was loaded",
+    //   message:
+    //     "Notification will close in 2 seconds, you can close this notification now",
+    //   icon: <CircleCheck size={16} />,
+    //   autoClose: 2000,
+    // });
+    // reRenderViewer();
+    // setRenderTree(generateUUID);
+  }
 
-    const scenegraphservice = new SceneGraphService();
-    await scenegraphservice.getAllSceneGraphActors(scene);
-
-    updateNotification({
-      id: "load-graph",
-      color: "teal",
-      title: "Data was loaded",
-      message:
-        "Notification will close in 2 seconds, you can close this notification now",
-      icon: <CircleCheck size={16} />,
-      autoClose: 2000,
-    });
-
+  async function dateTest(event) {
+    let sgs = new SceneGraphService();
+    await sgs.getAllDates();
     reRenderViewer();
-    setRenderTree(generateUUID);
   }
 
   async function resetDocument(event) {
@@ -139,7 +142,7 @@ export function DetailsTab() {
             </tbody>
           </Table>
           <Button onClick={updateDocument}>Update Document</Button>
-          <Button onClick={resetDocument}>Reset Document</Button>
+          <Button onClick={dateTest}>Get Dates</Button>
         </Stack>
       </ScrollArea>
     </Stack>

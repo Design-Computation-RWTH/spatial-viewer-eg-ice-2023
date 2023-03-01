@@ -30,6 +30,8 @@ export type ViewerContextType = {
   getChangedDocument: (uri: string) => ChangedDocument;
   renderTree: string | null;
   setRenderTree: Dispatch<SetStateAction<string>>;
+  oxiGraph: oxigraph.Store | null;
+  setOxiGraph: Dispatch<SetStateAction<oxigraph.Store>>;
   reRenderViewer: () => void;
   reparentMesh: (
     childObject: THREE.Object3D,

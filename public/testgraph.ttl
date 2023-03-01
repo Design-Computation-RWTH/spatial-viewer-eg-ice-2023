@@ -3,10 +3,11 @@ prefix ex: <http://example.org/ex#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-ex:box1 a sg:SpatialActor .
+ex:box1 a sg:SpatialActor ;
+    sg:created  "2023-02-21T18:32:31.089Z"^^xsd:dateTime .
 
 ex:transformBox1_1 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T18:32:31.089Z"^^xsd:dateTime;
+    sg:created  "2023-02-21T18:32:31.089Z"^^xsd:dateTime;
     sg:targets  ex:box1;
     sg:m1 1 ;
     sg:m2 0 ;
@@ -27,7 +28,7 @@ ex:transformBox1_1 rdf:type sg:Transformation;
 
 
 ex:transformBox1_2 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T18:36:31.089Z"^^xsd:dateTime;
+    sg:created  "2023-02-22T18:36:31.089Z"^^xsd:dateTime;
     sg:targets  ex:box1;
     sg:m1 1 ;
     sg:m2 0 ;
@@ -66,11 +67,12 @@ ex:transformBox1_3 rdf:type sg:Transformation;
     sg:m15 1 ;
     sg:m16 1 .
 
-ex:box2 a sg:SpatialActor .
+ex:box2 a sg:SpatialActor ;
+    sg:created  "2023-02-26T18:01:31.089Z"^^xsd:dateTime.   
 
 
 ex:transformBox2 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T18:01:31.089Z"^^xsd:dateTime;
+    sg:created  "2023-02-26T18:01:31.089Z"^^xsd:dateTime;
     sg:targets  ex:box2;
     sg:hasParent ex:box1 ;
     sg:m1 1 ;

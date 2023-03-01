@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { generateUUID } from "three/src/math/MathUtils";
+import * as oxigraph from "oxigraph";
 
 import {
   ChangedDocument,
@@ -25,6 +26,7 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [changedDocuments, setChangedDocuments] = useState<ChangedDocument[]>(
     []
   );
+  const [oxiGraph, setOxiGraph] = useState<oxigraph.Store>();
 
   function reRenderViewer() {
     renderer.render(scene, currentCamera);
@@ -165,6 +167,8 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         getChangedDocument,
         renderTree,
         setRenderTree,
+        oxiGraph,
+        setOxiGraph,
         reRenderViewer,
         reparentMesh,
         addTransformToMesh,
