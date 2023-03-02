@@ -45,14 +45,26 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     let data: string;
     let repository = new oxigraph.Store();
+
+    await fetch("http://localhost:3001/load_graph")
+      .then((response) => response.text())
+      .then((content) => {
+        console.log("loaded graph");
+        data = content;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    repository.load(
+      data,
+      "text/turtle",
+      "http://example.com/",
+      oxigraph.defaultGraph()
+    );
+
     await loadFileAsString("../../testgraph.ttl").then((loadData) => {
       data = loadData;
-      repository.load(
-        data,
-        "text/turtle",
-        "http://example.com/",
-        oxigraph.defaultGraph()
-      );
     });
 
     setOxiGraphStore(repository);
@@ -145,7 +157,6 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function construcSpatialActor(spatialActor: string, date: Date) {
-    saveGraphToTtl();
     let query = `
     PREFIX sg: <http://example.org/scenegraph#>
     PREFIX ex: <http://example.org/ex#>
@@ -288,6 +299,7 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       );
       oxiGraphStore.add(matrixElement);
     }
+    console.log("Save Graph");
     saveGraphToTtl();
   }
 
@@ -298,8 +310,26 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     mesh.updateMatrix();
   }
 
-  function saveGraphToTtl() {
-    oxiGraphStore.dump("text/turtle", oxigraph.defaultGraph());
+  async function saveGraphToTtl() {
+    let graphData = await oxiGraphStore.dump(
+      "text/turtle",
+      oxigraph.defaultGraph()
+    );
+
+    // Send the FormData object in a fetch request
+    fetch("http://localhost:3001/save_graph", {
+      method: "POST",
+      headers: {
+        "Content-Type": "text/plain",
+      },
+      body: graphData,
+    })
+      .then((response) => {
+        console.log("File uploaded successfully", response);
+      })
+      .catch((error) => {
+        console.error("Error uploading file:", error);
+      });
   }
 
   function getMatrixFromGraph(map: any, uri: string): THREE.Matrix4 {

@@ -1,12 +1,5 @@
-import { ActionIcon, Navbar } from "@mantine/core";
-import {
-  BinaryTree,
-  ChartDots3,
-  Eyeglass,
-  Hexagon3d,
-  Home,
-  Upload,
-} from "tabler-icons-react";
+import { Navbar } from "@mantine/core";
+import { BinaryTree, ChartDots3, Upload } from "tabler-icons-react";
 import { HomeTab } from "./HomeTab";
 import { Tabs } from "@mantine/core";
 import { DetailsTab } from "./DetailsTab";
