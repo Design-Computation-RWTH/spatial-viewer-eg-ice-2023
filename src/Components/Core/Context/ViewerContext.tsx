@@ -58,29 +58,12 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     // update the child's matrix and parent's matrix
     childObject.updateMatrix();
     parentObject.updateMatrix();
-
-    //childObject.parent.remove(childObject);
-
-    // // reparent the object
-    // parentObject.add(childObject);
-    // childObject.updateMatrix();
-    // let newWorldPos = new THREE.Vector3();
-    // childObject.getWorldPosition(newWorldPos); // get new world position
-
-    // // calculate the difference between the original and new positions
-    // const posDiff = new THREE.Vector3();
-    // posDiff.subVectors(currentWorldPos, newWorldPos);
-
-    // // apply the difference to the object's local position
-    // childObject.position.add(posDiff);
-    // // update the object's matrix so it reflects the new position
-    // childObject.updateMatrix();
-    // parentObject.updateMatrix();
   }
 
   function getChangedDocument(uri: string): ChangedDocument {
     let document: ChangedDocument | null = null;
     if (changedDocuments != null) {
+      // eslint-disable-next-line array-callback-return
       changedDocuments.find((child) => {
         if (child.uri === uri) document = child;
       });

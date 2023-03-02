@@ -49,7 +49,6 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     await fetch("http://localhost:3001/load_graph")
       .then((response) => response.text())
       .then((content) => {
-        console.log("loaded graph");
         data = content;
       })
       .catch((error) => {

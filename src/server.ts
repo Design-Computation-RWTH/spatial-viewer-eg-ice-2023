@@ -45,7 +45,6 @@ app.post("/save_graph", (req, res) => {
 });
 
 app.get("/load_graph", (req, res) => {
-  let filePath = "./storage/graphDump.ttl";
   let workingDir = path.join(__dirname, "..", "/storage/graphDump.ttl");
 
   console.log(workingDir);
