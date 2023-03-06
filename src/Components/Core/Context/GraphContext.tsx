@@ -25,6 +25,8 @@ export type GraphContextType = {
   updateSceneGraphActor: (mesh: THREE.Mesh) => Promise<void>;
   getAllSceneGraphActors: (date: Date) => Promise<void>;
   getAllDates: () => Promise<any[]>;
+  simpleQuery(query: string): Promise<any[]>;
+  uriToPrefixString(uri: string): string;
 };
 
 export const GraphContext = createContext<GraphContextType | null>(null);
@@ -393,6 +395,41 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return matrix;
   }
 
+  async function simpleQuery(query: string): Promise<any[]> {
+    const results: any[] = await oxiGraphStore.query(query);
+
+    return results;
+  }
+
+  function uriToPrefixString(uri: string): string {
+    let newString: string = uri;
+
+    if (uri.includes("http://example.org/scenegraph#"))
+      newString = newString.replace("http://example.org/scenegraph#", "sg:");
+    else if (uri.includes("http://example.org/ex#"))
+      newString = newString.replace("http://example.org/ex#", "ex:");
+    else if (uri.includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#"))
+      newString = newString.replace(
+        "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+        "rdf:"
+      );
+    else if (uri.includes("http://www.w3.org/2000/01/rdf-schema#"))
+      newString = newString.replace(
+        "http://www.w3.org/2000/01/rdf-schema#",
+        "rdfs:"
+      );
+    else if (uri.includes("http://www.w3.org/2001/XMLSchema#"))
+      newString = newString.replace(
+        "http://www.w3.org/2001/XMLSchema#",
+        "xsd:"
+      );
+    else if (uri.includes("http://purl.org/dc/terms/"))
+      newString = newString.replace("http://purl.org/dc/terms/", "dcterms::");
+    else if (uri.includes("https://w3id.org/omg#"))
+      newString = newString.replace("https://w3id.org/omg#", "omg:");
+
+    return newString;
+  }
   return (
     <GraphContext.Provider
       value={{
@@ -408,6 +445,8 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         updateSceneGraphActor,
         getAllSceneGraphActors,
         getAllDates,
+        simpleQuery,
+        uriToPrefixString,
       }}
     >
       {children}

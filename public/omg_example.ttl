@@ -1,0 +1,661 @@
+@prefix schema: <http://schema.org/> .
+@prefix bot: <https://w3id.org/bot#> .
+@prefix ex: <http://example.org/columns#> .
+@prefix geometry: <http://rdf.bg/geometry.ttl#> .
+@prefix omg: <https://w3id.org/omg#> .
+@prefix opm: <https://w3id.org/opm#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix seas: <https://w3id.org/seas/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:BooleanOperation1
+  rdf:type geometry:BooleanOperation ;
+  geometry:firstObject ex:Cone1 ;
+  geometry:secondObject ex:Transformation2 ;
+  geometry:type 1 ;
+  seas:hasProperty ex:boolOp1type ;
+.
+ex:Box1
+  rdf:type geometry:Box ;
+  geometry:height "500"^^xsd:double ;
+  geometry:length "820"^^xsd:double ;
+  geometry:width "820"^^xsd:double ;
+  seas:hasProperty ex:box1height ;
+  seas:hasProperty ex:box1length ;
+  seas:hasProperty ex:box1width ;
+.
+ex:Box2
+  rdf:type geometry:Box ;
+  geometry:height "600"^^xsd:double ;
+  geometry:length "600"^^xsd:double ;
+  geometry:width "600"^^xsd:double ;
+  seas:hasProperty ex:box2height ;
+  seas:hasProperty ex:box2length ;
+  seas:hasProperty ex:box2width ;
+.
+ex:Box3
+  rdf:type geometry:Box ;
+  seas:hasProperty ex:box3height ;
+  seas:hasProperty ex:box3length ;
+  seas:hasProperty ex:box3width ;
+.
+ex:Collection1
+  rdf:type geometry:Collection ;
+  geometry:objects ex:Box1 ;
+  geometry:objects ex:Transformation1 ;
+  geometry:objects ex:Transformation3 ;
+.
+ex:Cone1
+  rdf:type geometry:Cone ;
+  geometry:height "1200"^^xsd:double ;
+  geometry:radius "460"^^xsd:double ;
+  seas:hasProperty ex:cone1height ;
+  seas:hasProperty ex:cone1radius ;
+.
+ex:Cylinder1
+  rdf:type geometry:Cylinder ;
+  geometry:length "2270"^^xsd:double ;
+  geometry:radius "202"^^xsd:double ;
+  seas:hasProperty ex:cylinder1length ;
+  seas:hasProperty ex:cylinder1radius ;
+.
+ex:Cylinder2
+  rdf:type geometry:Cylinder ;
+  geometry:length "3370"^^xsd:double ;
+  geometry:radius "460"^^xsd:double ;
+  seas:hasProperty ex:cylinder2length ;
+  seas:hasProperty ex:cylinder2radius ;
+.
+ex:Matrix1
+  rdf:type geometry:Matrix ;
+  geometry:_11 "1"^^xsd:double ;
+  geometry:_22 "1"^^xsd:double ;
+  geometry:_33 "1"^^xsd:double ;
+  geometry:_41 "410"^^xsd:double ;
+  geometry:_42 "410"^^xsd:double ;
+  geometry:_43 "500"^^xsd:double ;
+  seas:hasProperty ex:matrix1_11 ;
+  seas:hasProperty ex:matrix1_22 ;
+  seas:hasProperty ex:matrix1_33 ;
+  seas:hasProperty ex:matrix1_41 ;
+  seas:hasProperty ex:matrix1_42 ;
+  seas:hasProperty ex:matrix1_43 ;
+.
+ex:Matrix2
+  rdf:type geometry:Matrix ;
+  geometry:_11 "1"^^xsd:double ;
+  geometry:_22 "1"^^xsd:double ;
+  geometry:_33 "1"^^xsd:double ;
+  geometry:_41 "-360"^^xsd:double ;
+  geometry:_42 "-360"^^xsd:double ;
+  geometry:_43 "600"^^xsd:double ;
+  seas:hasProperty ex:matrix2_11 ;
+  seas:hasProperty ex:matrix2_22 ;
+  seas:hasProperty ex:matrix2_33 ;
+  seas:hasProperty ex:matrix2_41 ;
+  seas:hasProperty ex:matrix2_42 ;
+  seas:hasProperty ex:matrix2_43 ;
+.
+ex:Matrix3
+  rdf:type geometry:Matrix ;
+  geometry:_11 "1"^^xsd:double ;
+  geometry:_22 "1"^^xsd:double ;
+  geometry:_33 "-1"^^xsd:double ;
+  geometry:_41 "410"^^xsd:double ;
+  geometry:_42 "410"^^xsd:double ;
+  geometry:_43 "3370"^^xsd:double ;
+  seas:hasProperty ex:matrix3_11 ;
+  seas:hasProperty ex:matrix3_22 ;
+  seas:hasProperty ex:matrix3_33 ;
+  seas:hasProperty ex:matrix3_41 ;
+  seas:hasProperty ex:matrix3_42 ;
+  seas:hasProperty ex:matrix3_43 ;
+.
+ex:Matrix4
+  rdf:type geometry:Matrix ;
+  seas:hasProperty ex:matrix4_11 ;
+  seas:hasProperty ex:matrix4_22 ;
+  seas:hasProperty ex:matrix4_33 ;
+  seas:hasProperty ex:matrix4_41 ;
+  seas:hasProperty ex:matrix4_42 ;
+.
+ex:PropertyState_1
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "500.0" ;
+.
+ex:PropertyState_10
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "410" ;
+.
+ex:PropertyState_11
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "500" ;
+.
+ex:PropertyState_12
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_13
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "600" ;
+.
+ex:PropertyState_14
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "600" ;
+.
+ex:PropertyState_15
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "600" ;
+.
+ex:PropertyState_16
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1200" ;
+.
+ex:PropertyState_17
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "460" ;
+.
+ex:PropertyState_18
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_19
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_2
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "820" ;
+.
+ex:PropertyState_20
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_21
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_22
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_23
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "-1" ;
+.
+ex:PropertyState_24
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "-360" ;
+.
+ex:PropertyState_25
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "410" ;
+.
+ex:PropertyState_26
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "-360" ;
+.
+ex:PropertyState_27
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "410" ;
+.
+ex:PropertyState_28
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "600" ;
+.
+ex:PropertyState_29
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "3370" ;
+.
+ex:PropertyState_3
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "820" ;
+.
+ex:PropertyState_30
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_31
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_32
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_33
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1500" ;
+.
+ex:PropertyState_34
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1500" ;
+.
+ex:PropertyState_35
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:24:44Z"^^xsd:dateTime ;
+  schema:value "530" ;
+.
+ex:PropertyState_36
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "3370" ;
+.
+ex:PropertyState_37
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "920" ;
+.
+ex:PropertyState_38
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "920" ;
+.
+ex:PropertyState_39
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-03T15:03:53Z"^^xsd:dateTime ;
+  schema:value "3370" ;
+.
+ex:PropertyState_4
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "202" ;
+.
+ex:PropertyState_40
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-03T15:03:53Z"^^xsd:dateTime ;
+  schema:value "460" ;
+.
+ex:PropertyState_5
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "2270" ;
+.
+ex:PropertyState_6
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_7
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_8
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "1" ;
+.
+ex:PropertyState_9
+  rdf:type opm:CurrentPropertyState ;
+  rdf:type opm:PropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  schema:value "410" ;
+.
+ex:Transformation1
+  rdf:type geometry:Transformation ;
+  geometry:matrix ex:Matrix1 ;
+  geometry:object ex:Cylinder1 ;
+.
+ex:Transformation2
+  rdf:type geometry:Transformation ;
+  geometry:matrix ex:Matrix2 ;
+  geometry:object ex:Box2 ;
+.
+ex:Transformation3
+  rdf:type geometry:Transformation ;
+  geometry:matrix ex:Matrix3 ;
+  geometry:object ex:BooleanOperation1 ;
+.
+ex:Transformation4
+  rdf:type geometry:Transformation ;
+  geometry:matrix ex:Matrix4 ;
+.
+ex:boolOp1type
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_12 ;
+.
+ex:box1height
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_1 ;
+  opm:hasPropertyState ex:PropertyState_35 ;
+  opm:hasPropertyState ex:newPropertyState ;
+.
+ex:box1length
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_2 ;
+.
+ex:box1width
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_3 ;
+.
+ex:box2height
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_13 ;
+.
+ex:box2length
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_14 ;
+.
+ex:box2width
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_15 ;
+.
+ex:box3height
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_36 ;
+.
+ex:box3length
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_37 ;
+.
+ex:box3width
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_38 ;
+.
+ex:column1
+  rdf:type bot:Element ;
+  omg:hasSimpleGeometryDescription "some STEP geometry" ;
+.
+ex:column2
+  rdf:type bot:Element ;
+  omg:hasGeometry ex:geometry1 ;
+.
+ex:column3
+  rdf:type bot:Element ;
+  omg:hasGeometry ex:geometry2 ;
+  omg:hasGeometry ex:geometry3 ;
+.
+ex:column4
+  rdf:type bot:Element ;
+  omg:hasGeometry ex:geometry4 ;
+  omg:hasGeometry ex:geometry5 ;
+  omg:hasGeometry ex:geometry6 ;
+  omg:hasGeometry ex:geometry7 ;
+  seas:hasProperty ex:height ;
+  seas:hasProperty ex:volume ;
+.
+ex:cone1height
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_16 ;
+.
+ex:cone1radius
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_17 ;
+.
+ex:cylinder1length
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_5 ;
+.
+ex:cylinder1radius
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_4 ;
+.
+ex:cylinder2length
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_39 ;
+.
+ex:cylinder2radius
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_40 ;
+.
+ex:geometry1
+  rdf:type omg:Geometry ;
+  omg:hasContext ex:highDetail ;
+  omg:hasSimpleGeometryDescription "some glTF bin" ;
+  omg:hasSimpleGeometryDescription "some glTF json" ;
+.
+ex:geometry2
+  rdf:type omg:Geometry ;
+  omg:hasSimpleGeometryDescription "some COLLADA geometry" ;
+  omg:isDerivedFromGeometry ex:geometry3 ;
+.
+ex:geometry3
+  rdf:type omg:Geometry ;
+  omg:hasComplexGeometryDescription ex:Matrix4 ;
+  omg:hasContext ex:highDetail ;
+  omg:transformsGeometry ex:geometry6 ;
+.
+ex:geometry4
+  rdf:type omg:Geometry ;
+  omg:complementsGeometry ex:geometry5 ;
+  omg:hasGeometryState ex:geometryState1 ;
+.
+ex:geometry5
+  rdf:type omg:Geometry ;
+  omg:hasGeometryState ex:geometryState2 ;
+  omg:isDerivedFromGeometry ex:geometry6 ;
+.
+ex:geometry6
+  rdf:type omg:Geometry ;
+  omg:hasGeometryState ex:geometryState3 ;
+  omg:isDerivedFromGeometry ex:geometry5 ;
+.
+ex:geometry7
+  rdf:type omg:Geometry ;
+  omg:hasGeometryState ex:geometryState4 ;
+  omg:hasGeometryState ex:geometryState5 ;
+  omg:isDerivedFromGeometry ex:geometry5 ;
+  omg:isDerivedFromGeometry ex:geometry6 ;
+.
+ex:geometryState1
+  rdf:type omg:CurrentGeometryState ;
+  rdf:type omg:GeometryState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  omg:hasSimpleGeometryDescription "some DWG geometry" ;
+.
+ex:geometryState2
+  rdf:type omg:CurrentGeometryState ;
+  rdf:type omg:GeometryState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  omg:hasSimpleGeometryDescription "some OBJ geometry" ;
+  omg:hasSimpleGeometryDescription "some OBJ material" ;
+.
+ex:geometryState3
+  rdf:type omg:CurrentGeometryState ;
+  rdf:type omg:GeometryState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-06T19:08:23Z"^^xsd:dateTime ;
+  omg:containsGeometryObject ex:BooleanOperation1 ;
+  omg:containsGeometryObject ex:Box1 ;
+  omg:containsGeometryObject ex:Box2 ;
+  omg:containsGeometryObject ex:Collection1 ;
+  omg:containsGeometryObject ex:Cone1 ;
+  omg:containsGeometryObject ex:Cylinder1 ;
+  omg:containsGeometryObject ex:Matrix1 ;
+  omg:containsGeometryObject ex:Matrix2 ;
+  omg:containsGeometryObject ex:Matrix3 ;
+  omg:containsGeometryObject ex:Transformation1 ;
+  omg:containsGeometryObject ex:Transformation2 ;
+  omg:containsGeometryObject ex:Transformation3 ;
+  omg:hasComplexGeometryDescription ex:Collection1 ;
+  omg:hasContext ex:highDetail ;
+.
+ex:geometryState4
+  rdf:type omg:GeometryState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-03T15:03:53Z"^^xsd:dateTime ;
+  omg:hasComplexGeometryDescription ex:Cylinder2 ;
+  omg:isDerivedFromGeometryState ex:geometryState3 ;
+.
+ex:geometryState5
+  rdf:type omg:CurrentGeometryState ;
+  rdf:type omg:GeometryState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-04T19:08:23Z"^^xsd:dateTime ;
+  omg:containsGeometryObject ex:Box3 ;
+  omg:hasComplexGeometryDescription ex:Box3 ;
+  omg:isDerivedFromGeometryState ex:geometryState3 ;
+.
+ex:height
+  rdf:type opm:Property ;
+  omg:isExplicitlyDerivedFrom ex:box3height ;
+.
+ex:highDetail
+  rdf:type omg:Context ;
+.
+ex:matrix1_11
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_6 ;
+.
+ex:matrix1_22
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_7 ;
+.
+ex:matrix1_33
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_8 ;
+.
+ex:matrix1_41
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_9 ;
+.
+ex:matrix1_42
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_10 ;
+.
+ex:matrix1_43
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_11 ;
+.
+ex:matrix2_11
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_18 ;
+.
+ex:matrix2_22
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_20 ;
+.
+ex:matrix2_33
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_22 ;
+.
+ex:matrix2_41
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_24 ;
+.
+ex:matrix2_42
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_26 ;
+.
+ex:matrix2_43
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_28 ;
+.
+ex:matrix3_11
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_19 ;
+.
+ex:matrix3_22
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_21 ;
+.
+ex:matrix3_33
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_23 ;
+.
+ex:matrix3_41
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_25 ;
+.
+ex:matrix3_42
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_27 ;
+.
+ex:matrix3_43
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_29 ;
+.
+ex:matrix4_11
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_30 ;
+.
+ex:matrix4_22
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_31 ;
+.
+ex:matrix4_33
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_32 ;
+.
+ex:matrix4_41
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_33 ;
+.
+ex:matrix4_42
+  rdf:type opm:Property ;
+  opm:hasPropertyState ex:PropertyState_34 ;
+.
+ex:newPropertyState
+  rdf:type opm:CurrentPropertyState ;
+  <http://www.w3.org/ns/prov#generatedAtTime> "2018-12-06T13:56:25.290+01:00"^^xsd:dateTime ;
+  schema:value "600" ;
+.
+ex:volume
+  rdf:type opm:Property ;
+  omg:isImplicitlyDerivedFrom ex:geometry6 ;
+.

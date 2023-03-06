@@ -3,16 +3,28 @@ prefix ex: <http://example.org/ex#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix omg: <https://w3id.org/omg#>
 
 ex:chair_ifc_1 a sg:SpatialActor ;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;
+    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime;
     rdfs:name "ChairModel";
-    
+    omg:hasGeometry ex:ChairModelGeometry_1;
     
     .
 
+
+ex:ChairModelGeometry_1 a omg:Geometry;
+    omg:hasGeometryState    ex:ChairModelState_1 .
+
+ex:ChairModelState_1  a omg:GeometryState;
+    omg:hasComplexGeometryDescription ex:complexChairModelGeometry_1.
+
+ex:complexChairModelGeometry_1 a dcat:Distribution;
+    dcat:downloadURL <>.
+
 ex:transformBox1_1 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;
+    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime;
     sg:targets  ex:box1;
     sg:m1 1 ;
     sg:m2 0 ;
@@ -33,7 +45,7 @@ ex:transformBox1_1 rdf:type sg:Transformation;
 
 
 ex:transformBox1_2 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:33:56"^^xsd:dateTime;
+    dcterms:issued "2023-02-24T12:33:56"^^xsd:dateTime;
     sg:targets  ex:box1;
     sg:m1 1 ;
     sg:m2 0 ;
@@ -53,7 +65,7 @@ ex:transformBox1_2 rdf:type sg:Transformation;
     sg:m16 1 .
 
 ex:transformBox1_3 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:34:56"^^xsd:dateTime;
+    dcterms:issued "2023-02-24T12:34:56"^^xsd:dateTime;
     sg:targets  ex:box1;
     sg:m1 1 ;
     sg:m2 0 ;
@@ -73,11 +85,11 @@ ex:transformBox1_3 rdf:type sg:Transformation;
     sg:m16 1 .
 
 ex:box2 a sg:SpatialActor ;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime.
+    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime.
 
 
 ex:transformBox2 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;
+    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime;
     sg:targets  ex:box2;
     sg:hasParent ex:box1 ;
     sg:m1 1 ;
