@@ -137,7 +137,7 @@ export function ViewerTab() {
   }
 
   return (
-    <Stack style={{ height: "100%", width: "100%" }} justify="space-between">
+    <Stack style={{ height: "100%", width: "100%" }} justify="flex-start">
       <Title order={2}>SPARQL Query</Title>
       <RichTextEditor editor={editor}>
         <RichTextEditor.Toolbar>
@@ -149,33 +149,35 @@ export function ViewerTab() {
       </RichTextEditor>
       <Button onClick={executeQuery}>Execute Query</Button>
       <Title order={2}>Results</Title>
-      <Tabs defaultValue="raw" style={{ height: "100%", width: "100%" }}>
-        <Tabs.List>
-          <Tabs.Tab value="table">Table</Tabs.Tab>
-          <Tabs.Tab value="raw">Raw Content</Tabs.Tab>
-        </Tabs.List>
+      <ScrollArea.Autosize
+        maxHeight={500}
+        mx="xs"
+        style={{ height: "100%", maxWidth: "100%" }}
+        type="always"
+        offsetScrollbars
+      >
+        <Tabs defaultValue="table" style={{ height: "100%", width: "100%" }}>
+          <Tabs.List>
+            <Tabs.Tab value="table">Table</Tabs.Tab>
+            <Tabs.Tab value="raw">Raw Content</Tabs.Tab>
+          </Tabs.List>
 
-        <Tabs.Panel
-          style={{ height: "100%", width: "100%" }}
-          value="raw"
-          pt="xs"
-        >
-          <ScrollArea
+          <Tabs.Panel
             style={{ height: "100%", width: "100%" }}
-            type="always"
-            offsetScrollbars
+            value="raw"
+            pt="xs"
           >
             <Text>{rawContent}</Text>
-          </ScrollArea>
-        </Tabs.Panel>
+          </Tabs.Panel>
 
-        <Tabs.Panel value="table" pt="xs">
-          <Table>
-            {tableHead}
-            {tableContent}
-          </Table>
-        </Tabs.Panel>
-      </Tabs>
+          <Tabs.Panel value="table" pt="xs">
+            <Table>
+              {tableHead}
+              {tableContent}
+            </Table>
+          </Tabs.Panel>
+        </Tabs>
+      </ScrollArea.Autosize>
     </Stack>
   );
 }
