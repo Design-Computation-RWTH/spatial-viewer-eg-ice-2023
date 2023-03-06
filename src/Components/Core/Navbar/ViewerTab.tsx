@@ -5,19 +5,20 @@ import {
   Table,
   Tabs,
   Text,
-  Textarea,
   Title,
+  Tooltip,
 } from "@mantine/core";
+import { useLocalStorage } from "@mantine/hooks";
 import { RichTextEditor } from "@mantine/tiptap";
 import { Editor, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { lowlight } from "lowlight";
 import Code from "@tiptap/extension-code";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
-import { table } from "console";
 import { generateUUID } from "three/src/math/MathUtils";
+import { Quad } from "oxigraph";
 
 function escapeHtml(unsafe: string) {
   return unsafe
@@ -29,13 +30,11 @@ function escapeHtml(unsafe: string) {
 }
 
 export function ViewerTab() {
-  let codeExample = escapeHtml(`
-  SELECT ?s ?p ?o
+  const [sparqlQuery, setSparqlQuery] = useLocalStorage({
+    key: "sparql-query",
+  });
 
-  WHERE {?s ?p ?o}
-  
-  Limit 10
-  `);
+  useEffect(() => {}, [sparqlQuery]);
 
   const { simpleQuery, uriToPrefixString } = useContext(
     GraphContext
@@ -45,62 +44,31 @@ export function ViewerTab() {
   const [tableContent, setTableContent] = useState<any>(<tbody></tbody>);
 
   const editor: Editor = useEditor({
-    extensions: [StarterKit, Code, CodeBlockLowlight.configure({ lowlight })],
-    content: `<pre><code readOnly>${codeExample}</code></pre>`,
+    extensions: [StarterKit, CodeBlockLowlight.configure({ lowlight })],
+    content: `<pre><code readOnly>${sparqlQuery}</code></pre>`,
   });
 
   async function executeQuery(event) {
     console.log("Query:", editor.getText());
+    setSparqlQuery(escapeHtml(editor.getText()));
+    console.log("escaped:", escapeHtml(editor.getText()));
     let queryResult = await simpleQuery(editor.getText());
     console.log("Result", queryResult);
     let jsonResponse = convertToJSONContent(queryResult);
 
     setRawContent(JSON.stringify(jsonResponse, null, 2));
-
-    let headVars: any[] = [];
-
-    let tHead = (
-      <thead>
-        <tr>
-          {jsonResponse.head.vars.map((vars, index) => {
-            headVars.push(vars);
-            return <th>{vars}</th>;
-          })}
-        </tr>
-      </thead>
-    );
-    setTableHead(tHead);
-
-    let tContent = (
-      <tbody>
-        {jsonResponse.results.bindings.map((bindings, index) => {
-          return (
-            <tr key={generateUUID()}>
-              {headVars.map(function (value) {
-                console.log(
-                  "prefixed: ",
-                  uriToPrefixString(bindings[value].value)
-                );
-                return <th>{uriToPrefixString(bindings[value].value)}</th>;
-              })}
-            </tr>
-          );
-        })}
-      </tbody>
-    );
-
-    setTableContent(tContent);
   }
 
   function convertToJSONContent(result: any[]): any {
-    let tempJSON: any = {
-      head: { vars: [] },
-      results: {
-        bindings: [],
-      },
-    };
+    let tempJSON: any;
 
     if (result[0] instanceof Map) {
+      tempJSON = {
+        head: { vars: [] },
+        results: {
+          bindings: [],
+        },
+      };
       for (const [key, value] of result[0]) {
         tempJSON.head.vars.push(key);
       }
@@ -131,6 +99,112 @@ export function ViewerTab() {
         }
         tempJSON.results.bindings.push(entryRes);
       }
+      let headVars: any[] = [];
+
+      let tHead = (
+        <thead>
+          <tr>
+            {tempJSON.head.vars.map((vars, index) => {
+              headVars.push(vars);
+              return <th>{vars}</th>;
+            })}
+          </tr>
+        </thead>
+      );
+      setTableHead(tHead);
+
+      let tContent = (
+        <tbody>
+          {tempJSON.results.bindings.map((bindings) => {
+            return (
+              <tr key={generateUUID()}>
+                {headVars.map(function (value) {
+                  console.log(
+                    "prefixed: ",
+                    uriToPrefixString(bindings[value].value)
+                  );
+                  return (
+                    <th>
+                      <Tooltip
+                        color="blue"
+                        position="top-start"
+                        withArrow
+                        label={bindings[value].value}
+                        style={{ maxWidth: "100%" }}
+                        multiline
+                      >
+                        <Text>{uriToPrefixString(bindings[value].value)}</Text>
+                      </Tooltip>
+                    </th>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      );
+
+      setTableContent(tContent);
+    } else if (result[0] instanceof Quad) {
+      console.log("Quad!");
+      setTableHead(
+        <thead>
+          <tr key={"SPARQLResultHeads"}>
+            <th>subject</th>
+            <th>predicate</th>
+            <th>object</th>
+          </tr>
+        </thead>
+      );
+
+      setTableContent(
+        <tbody>
+          {result.map((res) => {
+            let quad: Quad = res;
+
+            return (
+              <tr key={generateUUID()}>
+                <th>
+                  <Tooltip
+                    color="blue"
+                    position="top-start"
+                    withArrow
+                    label={quad.subject.value}
+                    style={{ maxWidth: "100%" }}
+                    multiline
+                  >
+                    <Text>{uriToPrefixString(quad.subject.value)}</Text>
+                  </Tooltip>
+                </th>
+                <th>
+                  <Tooltip
+                    color="blue"
+                    position="top-start"
+                    withArrow
+                    label={quad.predicate.value}
+                    style={{ maxWidth: "100%" }}
+                    multiline
+                  >
+                    <Text>{uriToPrefixString(quad.predicate.value)}</Text>
+                  </Tooltip>
+                </th>
+                <th>
+                  <Tooltip
+                    color="blue"
+                    position="top-start"
+                    withArrow
+                    label={quad.object.value}
+                    style={{ maxWidth: "100%" }}
+                    multiline
+                  >
+                    <Text>{uriToPrefixString(quad.object.value)}</Text>
+                  </Tooltip>
+                </th>
+              </tr>
+            );
+          })}
+        </tbody>
+      );
     }
     console.log(tempJSON);
     return tempJSON;
