@@ -6,8 +6,7 @@ const bodyParser = require("body-parser");
 const app = express();
 
 app.use(express.static("../" + path.join(__dirname, "public")));
-console.log("dirname", __dirname);
-console.log("path:", path.join("public", "graphDump.ttl"));
+
 app.use(bodyParser.text()); // Add this middleware to parse the request body as text
 
 app.use((req, res, next) => {
@@ -26,12 +25,8 @@ app.use((req, res, next) => {
 app.post("/save_graph", (req, res) => {
   // console.log("req data", req);
   // Get the file data from the request
-  console.log("req:", req.request);
+
   const fileData = req.body;
-
-  console.log("Start", req.body);
-
-  console.log("path:", path.join("public", "graphDump.ttl"));
 
   // Write the file to the public folder
   fs.writeFile("./storage/graphDump.ttl", fileData, (err) => {
@@ -46,6 +41,21 @@ app.post("/save_graph", (req, res) => {
 
 app.get("/load_graph", (req, res) => {
   let workingDir = path.join(__dirname, "..", "/storage/graphDump.ttl");
+
+  console.log(workingDir);
+
+  // Send the file to the client
+  res.sendFile(workingDir, (err) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error sending file");
+    }
+  });
+});
+
+app.get("/files/:filename", (req, res) => {
+  let filename = req.params.filename;
+  let workingDir = path.join(__dirname, "..", "/storage/", filename);
 
   console.log(workingDir);
 

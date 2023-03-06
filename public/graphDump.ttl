@@ -1,10 +1,15 @@
 prefix sg: <http://example.org/scenegraph#>
 prefix ex: <http://example.org/ex#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-ex:box1 a sg:SpatialActor ;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime.
+ex:chair_ifc_1 a sg:SpatialActor ;
+    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;
+    rdfs:name "ChairModel";
+    
+    
+    .
 
 ex:transformBox1_1 rdf:type sg:Transformation;
     sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;

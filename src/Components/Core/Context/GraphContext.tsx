@@ -148,6 +148,7 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
     }
 
+    console.log("scene to traverse: ", scene);
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh && !ids.includes(child.uuid)) {
         removeMesh(scene, child);
@@ -156,40 +157,59 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function construcSpatialActor(spatialActor: string, date: Date) {
-    let query = `
+    let selTransform = `
     PREFIX sg: <http://example.org/scenegraph#>
     PREFIX ex: <http://example.org/ex#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-    CONSTRUCT {
-      ?latestTransform rdf:type sg:Transformation ;
-                      sg:created ?latestCreated ;
-                      sg:targets ?subject ;
-                      ?transformProp ?transformObj .
-    }
-    WHERE {
-      <${spatialActor}> a sg:SpatialActor .
-      <${spatialActor}> ?p ?o .
-      OPTIONAL {
-        ?transform rdf:type sg:Transformation ;
-                  sg:targets <${spatialActor}> ;
-                  ?transformProp ?transformObj ;
-                  sg:created ?created .
-        FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
-        FILTER NOT EXISTS {
-          ?otherTransform rdf:type sg:Transformation ;
-                          sg:targets <${spatialActor}> ;
-                          sg:created ?otherCreated .
-          FILTER (?otherCreated < ?created && ?otherCreated >= "${date.toISOString()}"^^xsd:date)
+    SELECT ?transform
+
+      WHERE {
+        <${spatialActor}> a sg:SpatialActor .
+        <${spatialActor}> ?p ?o .
+        OPTIONAL {
+          ?transform rdf:type sg:Transformation ;
+                    sg:targets <${spatialActor}> ;
+                    ?prop ?obj ;
+                    sg:created ?created .
+          FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
+          FILTER NOT EXISTS {
+            ?otherTransform rdf:type sg:Transformation ;
+                            sg:targets <${spatialActor}> ;
+                            sg:created ?otherCreated .
+            FILTER (?otherCreated > ?created && ?otherCreated <= "${date.toISOString()}"^^xsd:date)
+          }
+          BIND(?transform AS ?latestTransform)
+          BIND(?created AS ?latestCreated)
         }
-        BIND(?transform AS ?latestTransform)
-        BIND(?created AS ?latestCreated)
       }
-    }
+      ORDER BY DESC(?latestCreated)
+      LIMIT 1
 
     `;
+
+    let selResult: any = await oxiGraphStore.query(selTransform);
+
+    let selSubject: string = selResult.values().next().value.values().next()
+      .value.value;
+
+    let query = `
+      PREFIX sg: <http://example.org/scenegraph#>
+      PREFIX ex: <http://example.org/ex#>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+      CONSTRUCT {
+          <${selSubject}> ?p ?o
+      } WHERE {
+          <${selSubject}> ?p ?o
+      }
+
+    `;
+
     let result: oxigraph.Quad[] = await oxiGraphStore.query(query);
+
     let cleanResult: any = {};
     for (let quad of result) {
       cleanResult[quad.predicate.value] = quad.object.value;
@@ -228,10 +248,11 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       mesh.userData["parent"] =
         cleanResult["http://example.org/scenegraph#hasParent"];
     }
-    reparentAll(scene);
+    reparentAll();
+    reRenderViewer();
   }
 
-  function reparentAll(scene: THREE.Scene) {
+  function reparentAll() {
     scene.traverse((object) => {
       if (object.userData["parent"]) {
         if (scene.getObjectByProperty("uuid", object.userData["parent"])) {
@@ -299,7 +320,8 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       oxiGraphStore.add(matrixElement);
     }
     console.log("Save Graph");
-    saveGraphToTtl();
+    await saveGraphToTtl();
+    reRenderViewer();
   }
 
   function setTransformFromMatrix(mesh: THREE.Mesh, matrix: THREE.Matrix4) {
@@ -315,8 +337,9 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       oxigraph.defaultGraph()
     );
 
+    console.log(graphData);
     // Send the FormData object in a fetch request
-    fetch("http://localhost:3001/save_graph", {
+    await fetch("http://localhost:3001/save_graph", {
       method: "POST",
       headers: {
         "Content-Type": "text/plain",
