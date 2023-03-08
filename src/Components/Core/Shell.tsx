@@ -152,7 +152,14 @@ export const Shell = () => {
     >
       <div style={{ height: "100%", width: "100%" }}>
         <ViewerComponent />
-        <div style={{ paddingLeft: "30%", height: "100%", width: "100%" }}>
+        <div
+          style={{
+            position: "fixed",
+            left: "40%",
+            bottom: "10%",
+            width: "60%",
+          }}
+        >
           <Timeline />
         </div>
       </div>

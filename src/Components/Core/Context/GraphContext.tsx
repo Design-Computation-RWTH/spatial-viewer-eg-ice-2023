@@ -6,6 +6,7 @@ import { ViewerContext } from "./ViewerContext";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
 import init from "oxigraph/web";
 import { generateUUID } from "three/src/math/MathUtils";
+import * as IFC from "web-ifc-three/IFCLoader";
 
 export interface ChangedDocument {
   uri: string;
@@ -105,11 +106,11 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       PREFIX ex: <http://example.org/ex#>
       PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
       PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+      PREFIX prov: <http://www.w3.org/ns/prov#>
       
       SELECT ?transformation ?created WHERE {
         ?transformation rdf:type sg:Transformation ;
-                         sg:created ?created ;
-                         sg:targets ex:box1 .
+                         prov:generatedAtTime ?created .
       } ORDER BY DESC(?created)
       `;
       const dateResults: any[] = await oxiGraphStore.query(findDatesQuery);
@@ -130,14 +131,21 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     PREFIX sg: <http://example.org/scenegraph#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT
+    PREFIX prov: <http://www.w3.org/ns/prov#>
+
+    SELECT DISTINCT
         ?s 
     where {
-        ?s a sg:SpatialActor;
-          sg:created ?created .
+        ?s a sg:SpatialActor .
+
+        ?transform a sg:Transformation ;
+          sg:hasSpatialActor ?s ;
+          prov:generatedAtTime ?created .
         
         FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
     }`;
+
+    console.log("Get Query Actors", query);
 
     const spatialActorsresults: any[] = await oxiGraphStore.query(query);
 
@@ -150,7 +158,6 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
     }
 
-    console.log("scene to traverse: ", scene);
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh && !ids.includes(child.uuid)) {
         removeMesh(scene, child);
@@ -164,22 +171,23 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     PREFIX ex: <http://example.org/ex#>
     PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
     PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    PREFIX prov: <http://www.w3.org/ns/prov#>
 
-    SELECT ?transform
+    SELECT ?transform ?p ?o
 
       WHERE {
         <${spatialActor}> a sg:SpatialActor .
         <${spatialActor}> ?p ?o .
         OPTIONAL {
           ?transform rdf:type sg:Transformation ;
-                    sg:targets <${spatialActor}> ;
+                    sg:hasSpatialActor <${spatialActor}> ;
                     ?prop ?obj ;
-                    sg:created ?created .
+                    prov:generatedAtTime ?created .
           FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
           FILTER NOT EXISTS {
             ?otherTransform rdf:type sg:Transformation ;
-                            sg:targets <${spatialActor}> ;
-                            sg:created ?otherCreated .
+              sg:hasSpatialActor <${spatialActor}> ;
+              prov:generatedAtTime ?otherCreated .
             FILTER (?otherCreated > ?created && ?otherCreated <= "${date.toISOString()}"^^xsd:date)
           }
           BIND(?transform AS ?latestTransform)
@@ -210,19 +218,88 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     `;
 
-    let result: oxigraph.Quad[] = await oxiGraphStore.query(query);
+    let transformResults: oxigraph.Quad[] = await oxiGraphStore.query(query);
 
     let cleanResult: any = {};
-    for (let quad of result) {
+    for (let quad of transformResults) {
       cleanResult[quad.predicate.value] = quad.object.value;
     }
 
-    let subject: string = result[0].subject.value;
-    let mesh: THREE.Object3D;
-    const geometry = new THREE.BoxGeometry(2, 2, 2);
-    const material = new THREE.MeshNormalMaterial();
+    // SELECt query for finding all necessary information to create our scenen actors
+    let fileQuery: string = `
+      prefix sg: <http://example.org/scenegraph#>
+      prefix ex: <http://example.org/ex#>
+      prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+      prefix dcterms: <http://purl.org/dc/terms/>
+      prefix dcat: <http://www.w3.org/ns/dcat#>
+      prefix prov: <http://www.w3.org/ns/prov#>
 
-    // Check if mesh already exists.
+      SELECT ?downloadURL ?mediatype ?filename
+      WHERE {   
+      <${spatialActor}> a sg:SpatialActor;
+        dcterms:title ?filename;
+        sg:hasRepresentation ?dist .
+
+      ?dist a dcat:Distribution ;
+        dcat:downloadURL ?downloadURL;
+        dcterms:mediaType ?mediatype .
+      }
+    `;
+
+    let fileResult: any[] = await oxiGraphStore.query(fileQuery);
+
+    let filename: string;
+    let mediatype: string;
+    let downloadURL: string;
+
+    // Filter out the desired variables
+    for (let entry of fileResult) {
+      for (let member of entry) {
+        if (member[0] === "downloadURL") {
+          downloadURL = member[1].value;
+        }
+        if (member[0] === "mediatype") {
+          mediatype = member[1].value;
+        }
+        if (member[0] === "filename") {
+          filename = member[1].value;
+        }
+      }
+    }
+
+    console.log(filename, mediatype, downloadURL);
+
+    let subject: string = transformResults[0].subject.value;
+    let mesh: THREE.Object3D;
+
+    if (mediatype.includes("png")) {
+      console.log("Its a picture!");
+      const geometry = new THREE.BoxGeometry(2, 2, 2);
+      const material = new THREE.MeshNormalMaterial();
+      mesh = new THREE.Mesh(geometry, material);
+      doRest(mesh, spatialActor, cleanResult, subject, filename);
+    } else if (mediatype.includes("ifc")) {
+      console.log("Its an IFC!");
+      if (!scene.getObjectByProperty("uuid", spatialActor)) {
+        console.log("Ifc is not yet here");
+        let ifc = await downloadIfc(downloadURL);
+        console.log("ifcblob:", ifc);
+        const fileURL = URL.createObjectURL(ifc);
+        const ifcLoader = await new IFC.IFCLoader();
+        ifcLoader.ifcManager.setWasmPath("../../../");
+        console.log("load!");
+        await ifcLoader.load(fileURL, (ifcModel) => {
+          mesh = ifcModel;
+          console.log("after load", mesh);
+          doRest(mesh, spatialActor, cleanResult, subject, filename);
+        });
+      }
+    }
+  }
+
+  function doRest(mesh, spatialActor, cleanResult, subject, filename) {
     if (scene.getObjectByProperty("uuid", spatialActor)) {
       // If it exists return it to its original position (retrieved from the grap)
       mesh = scene.getObjectByProperty("uuid", spatialActor);
@@ -237,13 +314,16 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       // Update Matrix
     } else {
       // Create new mesh TODO: replace by retrieving mesh from graph!
-      mesh = new THREE.Mesh(geometry, material);
+      // mesh = new THREE.Mesh(geometry, material);
       // Set name and uuid
-      mesh.name = spatialActor.split("#")[1];
+      console.log("no else?");
+      console.log(mesh);
+      mesh.name = filename;
       mesh.uuid = spatialActor;
       // Apply Matrix and add to the scene
-      mesh.applyMatrix4(getMatrixFromGraph(cleanResult, subject));
+      mesh.applyMatrix4(getMatrixFromGraph(cleanResult, spatialActor));
       mesh.updateMatrix();
+      console.log(mesh, "add!");
       scene.add(mesh);
     }
     if (cleanResult["http://example.org/scenegraph#hasParent"]) {
@@ -267,6 +347,24 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
     });
     reRenderViewer();
+  }
+
+  async function downloadIfc(downloadURL: string): Promise<Blob> {
+    let ifc;
+
+    await fetch(downloadURL)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        ifc = response.blob();
+        return;
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+
+    return ifc;
   }
 
   async function updateSceneGraphActor(mesh: THREE.Mesh) {

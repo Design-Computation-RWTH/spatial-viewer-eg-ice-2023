@@ -220,14 +220,19 @@ export function QueryTab() {
       style={{ height: "100%", width: "100%" }}
     >
       <Title order={2}>SPARQL Query</Title>
-      <RichTextEditor editor={editor} style={{ width: "100%" }}>
-        <RichTextEditor.Toolbar>
-          <RichTextEditor.ControlsGroup>
-            <RichTextEditor.CodeBlock />
-          </RichTextEditor.ControlsGroup>
-        </RichTextEditor.Toolbar>
-        <RichTextEditor.Content />
-      </RichTextEditor>
+      <ScrollArea>
+        <RichTextEditor
+          editor={editor}
+          style={{ width: "100%", minHeight: "300px", maxHeight: "700px" }}
+        >
+          <RichTextEditor.Toolbar>
+            <RichTextEditor.ControlsGroup>
+              <RichTextEditor.CodeBlock />
+            </RichTextEditor.ControlsGroup>
+          </RichTextEditor.Toolbar>
+          <RichTextEditor.Content />
+        </RichTextEditor>
+      </ScrollArea>
       <Button onClick={executeQuery}>Execute Query</Button>
       <Title order={2}>Results</Title>
       <ScrollArea
