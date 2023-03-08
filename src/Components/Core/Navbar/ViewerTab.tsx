@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Button,
   ScrollArea,
@@ -14,7 +15,6 @@ import { Editor, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
 import { lowlight } from "lowlight";
-import Code from "@tiptap/extension-code";
 import { useContext, useEffect, useState } from "react";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
 import { generateUUID } from "three/src/math/MathUtils";
@@ -34,7 +34,10 @@ export function ViewerTab() {
     key: "sparql-query",
   });
 
-  useEffect(() => {}, [sparqlQuery]);
+  useEffect(() => {
+    console.log("Test");
+    console.log(sparqlQuery);
+  }, []);
 
   const { simpleQuery, uriToPrefixString } = useContext(
     GraphContext
@@ -69,7 +72,7 @@ export function ViewerTab() {
           bindings: [],
         },
       };
-      for (const [key, value] of result[0]) {
+      for (const [key] of result[0]) {
         tempJSON.head.vars.push(key);
       }
 
@@ -104,7 +107,7 @@ export function ViewerTab() {
       let tHead = (
         <thead>
           <tr>
-            {tempJSON.head.vars.map((vars, index) => {
+            {tempJSON.head.vars.map((vars) => {
               headVars.push(vars);
               return <th>{vars}</th>;
             })}

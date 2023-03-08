@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { ReactNode, useContext, useEffect } from "react";
+import { ReactNode, useContext, useEffect } from "react";
 import { ActionIcon, Group, Menu, Paper, Slider, Text } from "@mantine/core";
 import {
   ArrowLeftRight,
@@ -71,10 +71,14 @@ export function Timeline() {
       const elapsedTime = newestDate.getTime() - oldestDate.getTime();
       const percentageMultiplier = 100 / elapsedTime;
 
-      datePercentages = tDates.map((date) => {
+      datePercentages = tDates.map((date, index) => {
         const percentage =
           (date.getTime() - oldestDate.getTime()) * percentageMultiplier;
-        const label = date.toLocaleDateString();
+        let label = "";
+
+        if (index === 0 || index === tDates.length - 1) {
+          label = date.toLocaleDateString();
+        }
         return { value: percentage, label };
       });
 
@@ -106,12 +110,12 @@ export function Timeline() {
 
       let newDate = new Date(correspondingTime);
       newDateString = newDate.toString();
-      //setCurrentDate(newDate);
     }
-    // setCurrentDate(newDateString);
+
     return newDateString;
   }
 
+  // Generate the first and last time mark for the timeline
   function setMarksForTime(): DatePercentage[] {
     let marks: DatePercentage[] = [];
     if (dates.length > 0) {
@@ -121,6 +125,7 @@ export function Timeline() {
     return marks;
   }
 
+  // Loading the scene graph and displaying a notification
   async function loadSceneGraph() {
     showNotification({
       id: "load-graph",
@@ -140,6 +145,7 @@ export function Timeline() {
 
     getDates();
 
+    // TODO: Show error messages
     updateNotification({
       id: "load-graph",
       color: "teal",

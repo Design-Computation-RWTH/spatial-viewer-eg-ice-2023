@@ -4,28 +4,46 @@ prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 prefix dcterms: <http://purl.org/dc/terms/>
-prefix omg: <https://w3id.org/omg#>
+prefix dcat: <http://www.w3.org/ns/dcat#>
+prefix prov: <http://www.w3.org/ns/prov#>
 
-ex:chair_ifc_1 a sg:SpatialActor ;
-    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime;
-    rdfs:name "ChairModel";
-    omg:hasGeometry ex:ChairModelGeometry_1;
+ex:jane_doe a foaf:person ;
+    rdfs:label "Jane Doe" .
+
+ex:file_1_catalog a sg:SpatialActor, dcat:Catalog ;
+    prov:generatedAtTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
+    rdfs:label "File 1 Catalog" ;
+    dcterms:title "File 1 Catalog" ;
+    dcterms:creator ex:jane_doe ;
+    dcat:dataset ex:file_1_v1_dataset, ex:file_1_v2_dataset .
     
-    .
+ex:file_1_v1_dataset a dcat:Dataset ;
+    prov:generatedAtTime "2023-02-24T12:32:56"^^xsd:dateTime ;
+    dcterms:creator ex:jane_doe ;
+    dcterms:spatial ex:transformation_1_1 ;
+    dcat:distribution ex:file_1_v1_distribution .
 
 
-ex:ChairModelGeometry_1 a omg:Geometry;
-    omg:hasGeometryState    ex:ChairModelState_1 .
+ex:file_1_v1_distribution a dcat:Distribution ;
+    dcat:downloadURL <http://localhost:3001/files/ChairCAAD.ifc> ;
+    dcterms:mediaType "ifc" .
 
-ex:ChairModelState_1  a omg:GeometryState;
-    omg:hasComplexGeometryDescription ex:complexChairModelGeometry_1.
 
-ex:complexChairModelGeometry_1 a dcat:Distribution;
-    dcat:downloadURL <>.
+ex:file_1_v2_dataset a dcat:Dataset ;
+    prov:generatedAtTime "2023-02-24T12:32:56"^^xsd:dateTime ;
+    dcterms:creator ex:jane_doe ;
+    dcterms:spatial ex:transformation_1_1 ;
+    dcat:distribution ex:file_1_v2_distribution .
 
-ex:transformBox1_1 rdf:type sg:Transformation;
-    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime;
-    sg:targets  ex:box1;
+
+ex:file_1_v2_distribution a dcat:Distribution ;
+    dcat:downloadURL <http://localhost:3001/files/ChairCAAD_v2.ifc> ;
+    dcterms:mediaType "ifc" .
+
+ex:transformation_1_1 rdf:type sg:Transformation ;
+    prov:generatedAtTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
+    prov:atTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_1_catalog ;
     sg:m1 1 ;
     sg:m2 0 ;
     sg:m3 0 ;
@@ -44,9 +62,11 @@ ex:transformBox1_1 rdf:type sg:Transformation;
     sg:m16 1 .
 
 
-ex:transformBox1_2 rdf:type sg:Transformation;
-    dcterms:issued "2023-02-24T12:33:56"^^xsd:dateTime;
-    sg:targets  ex:box1;
+ex:transformation_1_2 rdf:type sg:Transformation ;
+    prov:generatedAtTime "2023-02-26T12:33:56"^^xsd:dateTime ;
+    prov:atTime "2023-02-26T12:33:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_1_catalog ;
+    sg:hasParent ex:file_2_catalog ;
     sg:m1 1 ;
     sg:m2 0 ;
     sg:m3 0 ;
@@ -64,9 +84,29 @@ ex:transformBox1_2 rdf:type sg:Transformation;
     sg:m15 3 ;
     sg:m16 1 .
 
-ex:transformBox1_3 rdf:type sg:Transformation;
-    dcterms:issued "2023-02-24T12:34:56"^^xsd:dateTime;
-    sg:targets  ex:box1;
+
+ex:file_2_catalog a sg:SpatialActor, dcat:Catalog ;
+    prov:generatedAtTime  "023-02-25T12:33:56"^^xsd:dateTime ;
+    rdfs:label "File 2 Catalog" ;
+    dcterms:title "File 2 Catalog" ;
+    dcterms:creator ex:jane_doe ;
+    dcat:dataset ex:file_2_v1_dataset .
+    
+ex:file_2_v1_dataset a dcat:Dataset ;
+    prov:generatedAtTime "023-02-25T12:33:56"^^xsd:dateTime ;
+    dcterms:creator ex:jane_doe ;
+    dcterms:spatial ex:transformation_2_1 ;
+    dcat:distribution ex:file_1_v1_distribution .
+
+
+ex:file_2_v1_distribution a dcat:Distribution ;
+    dcat:downloadURL <http://localhost:3001/files/Chair_1.png> ;
+    dcterms:mediaType <https://www.iana.org/assignments/media-types/image/png> .
+
+ex:transformation_2_1 rdf:type sg:Transformation ;
+    prov:generatedAtTime "2023-02-25T12:33:56"^^xsd:dateTime ;
+    prov:atTime "2023-02-25T12:33:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_2_catalog ;
     sg:m1 1 ;
     sg:m2 0 ;
     sg:m3 0 ;
@@ -79,32 +119,7 @@ ex:transformBox1_3 rdf:type sg:Transformation;
     sg:m10 0 ;
     sg:m11 1 ;
     sg:m12 0 ;
-    sg:m13 1 ;
-    sg:m14 1 ;
-    sg:m15 1 ;
-    sg:m16 1 .
-
-ex:box2 a sg:SpatialActor ;
-    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime.
-
-
-ex:transformBox2 rdf:type sg:Transformation;
-    dcterms:issued  "2023-02-24T12:32:56"^^xsd:dateTime;
-    sg:targets  ex:box2;
-    sg:hasParent ex:box1 ;
-    sg:m1 1 ;
-    sg:m2 0 ;
-    sg:m3 0 ;
-    sg:m4 0 ;
-    sg:m5 0 ;
-    sg:m6 1 ;
-    sg:m7 0 ;
-    sg:m8 0 ;
-    sg:m9 0 ;
-    sg:m10 0 ;
-    sg:m11 1 ;
-    sg:m12 0 ;
-    sg:m13 -2 ;
-    sg:m14 2 ;
-    sg:m15 -2 ;
+    sg:m13 4 ;
+    sg:m14 4 ;
+    sg:m15 4 ;
     sg:m16 1 .
