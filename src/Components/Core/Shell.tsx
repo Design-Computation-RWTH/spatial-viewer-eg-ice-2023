@@ -3,17 +3,27 @@ import { useContext, useEffect } from "react";
 import {
   ActionIcon,
   AppShell,
+  Center,
   Footer,
   Group,
   Header,
+  SegmentedControl,
   Text,
   useMantineColorScheme,
 } from "@mantine/core";
 import { CoreNavbar } from "./Navbar/Nav";
 import { ViewerComponent } from "../Viewer/Viewer";
-import { MoonStars, SunHigh } from "tabler-icons-react";
+import {
+  LayoutSidebar,
+  LayoutSidebarLeftExpand,
+  LayoutSidebarRightExpand,
+  MoonStars,
+  SunHigh,
+} from "tabler-icons-react";
 import { Timeline } from "./Timeline/Timeline";
 import { GraphContext, GraphContextType } from "./Context/GraphContext";
+import { ViewerContext } from "./Context/ViewerContext";
+import { ViewerContextType } from "../../../@types/viewerTypes";
 
 export const Shell = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -22,6 +32,10 @@ export const Shell = () => {
   const { initOxi, setOxiGraphStore } = useContext(
     GraphContext
   ) as GraphContextType;
+
+  const { sidebarWidth, setSidebarWidth } = useContext(
+    ViewerContext
+  ) as ViewerContextType;
 
   useEffect(() => {
     initGraph();
@@ -34,37 +48,37 @@ export const Shell = () => {
 
   return (
     <AppShell
+      fixed
       styles={(theme) => ({
+        root: {
+          height: "100vh",
+          width: "100vw",
+        },
         main: {
           display: "flex",
           alignContent: "stretch",
           justifyContent: "space-evenly",
           alignItems: "stretch",
           flexDirection: "column",
-          width: "100vw",
-          height: "100vh",
-          paddingLeft: "30%",
+          // position: "relative",
+          width: "100%",
+          height: "100%",
+          minHeight: "90%",
+          // paddingLeft: "30%",
           backgroundColor:
             theme.colorScheme === "dark"
               ? theme.colors.dark[8]
               : theme.colors.gray[0],
         },
-        body: { height: "100vh" },
+        body: {
+          height: "90%",
+          width: "100%",
+          maxHeight: "100%",
+          maxWidth: "100%",
+        },
       })}
-      fixed
-      footer={
-        <Footer height={60} p="md">
-          <Group position="center" spacing="xl">
-            <Text size="sm">
-              <span style={{ fontWeight: "bolder" }}>
-                powered by design computation
-              </span>
-            </Text>
-          </Group>
-        </Footer>
-      }
       header={
-        <Header height={70} p="md">
+        <Header height={"5%"} style={{ position: "relative" }} p="md">
           <div
             style={{
               display: "flex",
@@ -90,10 +104,48 @@ export const Shell = () => {
         </Header>
       }
       navbar={<CoreNavbar />}
+      footer={
+        <Footer height={"5%"} style={{ position: "relative" }} p="md">
+          <Group position="center" spacing="xl">
+            <SegmentedControl
+              defaultValue={sidebarWidth}
+              onChange={setSidebarWidth}
+              data={[
+                {
+                  label: (
+                    <Center>
+                      <LayoutSidebarLeftExpand />
+                    </Center>
+                  ),
+                  value: "100%",
+                },
+                {
+                  label: (
+                    <Center>
+                      <LayoutSidebar />
+                    </Center>
+                  ),
+                  value: "30%",
+                },
+                {
+                  label: (
+                    <Center>
+                      <LayoutSidebarRightExpand />
+                    </Center>
+                  ),
+                  value: "0%",
+                },
+              ]}
+            ></SegmentedControl>
+          </Group>
+        </Footer>
+      }
     >
       <div style={{ height: "100%", width: "100%" }}>
         <ViewerComponent />
-        <Timeline />
+        <div style={{ paddingLeft: "30%", height: "100%", width: "100%" }}>
+          <Timeline />
+        </div>
       </div>
     </AppShell>
   );

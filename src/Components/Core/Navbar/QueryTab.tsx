@@ -29,7 +29,7 @@ function escapeHtml(unsafe: string) {
     .replace(/'/g, "&#039;");
 }
 
-export function ViewerTab() {
+export function QueryTab() {
   const [sparqlQuery, setSparqlQuery] = useLocalStorage({
     key: "sparql-query",
   });
@@ -214,9 +214,13 @@ export function ViewerTab() {
   }
 
   return (
-    <Stack style={{ height: "100%", width: "100%" }} justify="flex-start">
+    <Stack
+      align="stretch"
+      justify="flex-start"
+      style={{ height: "100%", width: "100%" }}
+    >
       <Title order={2}>SPARQL Query</Title>
-      <RichTextEditor editor={editor}>
+      <RichTextEditor editor={editor} style={{ width: "100%" }}>
         <RichTextEditor.Toolbar>
           <RichTextEditor.ControlsGroup>
             <RichTextEditor.CodeBlock />
@@ -226,35 +230,28 @@ export function ViewerTab() {
       </RichTextEditor>
       <Button onClick={executeQuery}>Execute Query</Button>
       <Title order={2}>Results</Title>
-      <ScrollArea.Autosize
-        maxHeight={500}
-        mx="xs"
+      <ScrollArea
+        mx=""
         style={{ height: "100%", maxWidth: "100%" }}
         type="always"
-        offsetScrollbars
       >
-        <Tabs defaultValue="table" style={{ height: "100%", width: "100%" }}>
-          <Tabs.List>
+        <Tabs defaultValue="table" variant="outline">
+          <Tabs.List grow>
             <Tabs.Tab value="table">Table</Tabs.Tab>
             <Tabs.Tab value="raw">Raw Content</Tabs.Tab>
           </Tabs.List>
 
-          <Tabs.Panel
-            style={{ height: "100%", width: "100%" }}
-            value="raw"
-            pt="xs"
-          >
+          <Tabs.Panel value="raw" pt="xs">
             <Text>{rawContent}</Text>
           </Tabs.Panel>
-
           <Tabs.Panel value="table" pt="xs">
-            <Table>
+            <Table width={"100%"}>
               {tableHead}
               {tableContent}
             </Table>
           </Tabs.Panel>
-        </Tabs>
-      </ScrollArea.Autosize>
+        </Tabs>{" "}
+      </ScrollArea>
     </Stack>
   );
 }

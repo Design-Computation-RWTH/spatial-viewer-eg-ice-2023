@@ -13,6 +13,8 @@ export interface ChangedDocument {
 export type ViewerContextType = {
   scene: THREE.Scene | null;
   setScene: Dispatch<SetStateAction<THREE.Scene>>;
+  sidebarWidth: string;
+  setSidebarWidth: Dispatch<SetStateAction<string>>;
   selMesh: THREE.Mesh | null;
   setSelMesh: Dispatch<SetStateAction<THREE.Mesh>>;
   renderer: THREE.Renderer | null;
