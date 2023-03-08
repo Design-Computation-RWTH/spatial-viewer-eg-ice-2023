@@ -1,4 +1,4 @@
-import { Navbar, SegmentedControl, Stack } from "@mantine/core";
+import { Navbar } from "@mantine/core";
 import { BinaryTree, ChartDots3, Upload } from "tabler-icons-react";
 import { HomeTab } from "./HomeTab";
 import { Tabs } from "@mantine/core";
