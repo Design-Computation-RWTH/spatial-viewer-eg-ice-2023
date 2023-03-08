@@ -105,7 +105,16 @@ export const Shell = () => {
       }
       navbar={<CoreNavbar />}
       footer={
-        <Footer height={"5%"} style={{ position: "relative" }} p="md">
+        <Footer
+          height={"5%"}
+          style={{
+            position: "relative",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+          p="md"
+        >
           <Group position="center" spacing="xl">
             <SegmentedControl
               defaultValue={sidebarWidth}
