@@ -258,21 +258,31 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       // Create a mesh object with the geometry and material
       mesh = new THREE.Mesh(geometry, material);
 
-      // Call the doRest function with the mesh object and other necessary parameters
-      await updateSceneObject(
-        mesh,
-        spatialActor,
-        cleanResult,
-        subject,
-        filename
-      );
+      // Download the ifc file and create a url for it
+      const png = await downloadFile(downloadURL);
+      const fileURL = URL.createObjectURL(png);
+      // Create an instance of the IFCLoader and set the wasm path
+      const textureLoader = new THREE.TextureLoader();
+      const texture = textureLoader.load(fileURL);
+
+      const img = new Image();
+      img.src = fileURL;
+
+      img.onload = function () {
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+        //const material = new THREE.MeshNormalMaterial();
+
+        const geometry = new THREE.PlaneGeometry(img.width, img.height);
+        const mesh = new THREE.Mesh(geometry, material);
+        updateSceneObject(mesh, spatialActor, cleanResult, subject, filename);
+      };
       return;
     } else if (mediatype.includes("ifc")) {
       // If it's an ifc file
       // Check if the scene doesn't already have a mesh object with the same uuid as the spatial actor
       if (!scene.getObjectByProperty("uuid", spatialActor)) {
         // Download the ifc file and create a url for it
-        let ifc = await downloadIfc(downloadURL);
+        let ifc = await downloadFile(downloadURL);
         const fileURL = URL.createObjectURL(ifc);
         // Create an instance of the IFCLoader and set the wasm path
         const ifcLoader = await new IFC.IFCLoader();
@@ -354,22 +364,22 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     reRenderViewer();
   }
 
-  async function downloadIfc(downloadURL: string): Promise<Blob> {
-    let ifc;
+  async function downloadFile(downloadURL: string): Promise<Blob> {
+    let file;
 
     await fetch(downloadURL)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        ifc = response.blob();
+        file = response.blob();
         return;
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
       });
 
-    return ifc;
+    return file;
   }
 
   async function updateSceneGraphActor(mesh: THREE.Mesh) {
