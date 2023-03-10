@@ -39,7 +39,7 @@ export type GraphContextType = {
 export const GraphContext = createContext<GraphContextType | null>(null);
 
 const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { scene, reRenderViewer } = useContext(
+  const { scene, reRenderViewer, setRenderTree } = useContext(
     ViewerContext
   ) as ViewerContextType;
 
@@ -49,21 +49,26 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     useState<number>(100);
   const [dates, setDates] = useState<string[]>([]);
 
+  /**
+   * Initializes an Oxigraph store, loads a graph from a remote endpoint and a local file,
+   * sets the store in state, gets all available dates, and returns the store.
+   */
   async function initOxi(): Promise<oxigraph.Store> {
-    await init(); // Required to compile the WebAssembly code.
+    // Initialize the required WebAssembly code.
+    await init();
 
+    // Load the graph from the remote endpoint.
     let data: string;
-    let repository = new oxigraph.Store();
+    try {
+      const response = await fetch("http://localhost:3001/load_graph");
+      data = await response.text();
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to load graph from remote endpoint.");
+    }
 
-    await fetch("http://localhost:3001/load_graph")
-      .then((response) => response.text())
-      .then((content) => {
-        data = content;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+    // Create a new Oxigraph store and load the graph into it.
+    const repository = new oxigraph.Store();
     repository.load(
       data,
       "text/turtle",
@@ -71,18 +76,24 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       oxigraph.defaultGraph()
     );
 
-    await loadFileAsString("../../testgraph.ttl").then((loadData) => {
+    // Load the local file.
+    try {
+      const loadData = await loadFileAsString("../../testgraph.ttl");
       data = loadData;
-    });
+    } catch (error) {
+      console.error(error);
+      throw new Error("Failed to load local file.");
+    }
 
+    // Set the Oxigraph store in state.
     setOxiGraphStore(repository);
 
-    let tDates = await getAllDates();
+    // Get all available dates.
+    const tDates = await getAllDates();
     setDates(tDates);
-    return repository;
-    // const dump = await repository.dump("text/turtle", oxigraph.defaultGraph());
 
-    // We can use here Oxigraph methods
+    // Return the Oxigraph store.
+    return repository;
   }
 
   function removeMesh(object, mesh) {
@@ -133,55 +144,88 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function getAllSceneGraphActors(date: Date) {
+    // await the executions of all queries
+    await querySceneGraphActors(date);
+    reRenderViewer();
+    reparentAll();
+  }
+
+  // This function retrieves all scene graph actors for a given date from the oxiGraphStore and constructs them.
+  async function querySceneGraphActors(date: Date) {
+    // Query the oxiGraphStore for all scene graph actors for the given date.
     const spatialActorsresults: any[] = await oxiGraphStore.query(
       selectSceneGraphActors(date)
     );
 
     let ids: string[] = [];
 
-    for (let spatialActorResult of spatialActorsresults) {
-      spatialActorResult.forEach((value) => {
-        ids.push(value.value);
-        construcSpatialActor(value.value, date);
-      });
-    }
+    // Construct spatial actors in parallel using Promise.all().
+    await Promise.all(
+      spatialActorsresults.map(async (spatialActorResult) => {
+        for (let value of spatialActorResult) {
+          const spatialActor = value[1].value;
+          // Store the ID of each constructed spatial actor in the `ids` array.
+          ids.push(spatialActor);
+          // Construct the spatial actor.
+          await construcSpatialActor(spatialActor, date);
+        }
+      })
+    );
 
+    // Remove meshes that are not in the `ids` array from the scene graph.
     scene.traverse((child) => {
       if (child instanceof THREE.Mesh && !ids.includes(child.uuid)) {
         removeMesh(scene, child);
       }
     });
+    return;
   }
 
+  // These two maps will be used to cache the results of previous queries to the oxiGraphStore.
+  const cachedTransformResults: Map<string, any> = new Map();
+  const cachedFileResults: Map<string, any> = new Map();
+
+  // This function constructs a single spatial actor.
   async function construcSpatialActor(spatialActor: string, date: Date) {
-    let selResult: any = await oxiGraphStore.query(
-      selectTransform(spatialActor, date)
-    );
+    // Check if the results of the transform query for this spatial actor are already cached. If not, query the oxiGraphStore for the transform data.
+    let transformResults = cachedTransformResults.get(spatialActor);
+    if (!transformResults) {
+      let selResult: any = await oxiGraphStore.query(
+        selectTransform(spatialActor, date)
+      );
 
-    let transformSubject: string = selResult
-      .values()
-      .next()
-      .value.values()
-      .next().value.value;
+      let transformSubject: string = selResult
+        .values()
+        .next()
+        .value.values()
+        .next().value.value;
 
-    let transformResults: oxigraph.Quad[] = await oxiGraphStore.query(
-      constructTransformMatrix(transformSubject)
-    );
+      transformResults = await oxiGraphStore.query(
+        constructTransformMatrix(transformSubject)
+      );
+      // Cache the results of the transform query for this spatial actor.
+      cachedTransformResults.set(spatialActor, transformResults);
+    }
 
     let cleanResult: any = {};
+    // Clean up the results of the transform query and store them in a new object.
     for (let quad of transformResults) {
       cleanResult[quad.predicate.value] = quad.object.value;
     }
 
-    // SELECT query for finding all necessary information to create our scenen actors
-
-    let fileResult: any[] = await oxiGraphStore.query(fileQuery(spatialActor));
+    // Check if the results of the file query for this spatial actor are already cached. If not, query the oxiGraphStore for the file data.
+    let fileResult = cachedFileResults.get(spatialActor);
+    if (!fileResult) {
+      fileResult = await oxiGraphStore.query(fileQuery(spatialActor));
+      // Cache the results of the file query for this spatial actor.
+      cachedFileResults.set(spatialActor, fileResult);
+    }
 
     let filename: string;
     let mediatype: string;
     let downloadURL: string;
 
-    // Filter out the desired variables
+    // Parse the file query results to extract the desired variables.
     for (let entry of fileResult) {
       for (let member of entry) {
         if (member[0] === "downloadURL") {
@@ -196,39 +240,64 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
     }
 
-    console.log(filename, mediatype, downloadURL);
-
+    // Declare the subject of the spatial actor by getting the subject value from the first transform result
     let subject: string = transformResults[0].subject.value;
+
+    // Declare a variable to hold the mesh object that will be created
     let mesh: THREE.Object3D;
 
+    // Check the media type of the file associated with the spatial actor
     if (mediatype.includes("png")) {
-      console.log("Its a picture!");
+      // If it's a png image
+      // Create a box geometry with dimensions of 2x2x2 and a normal material
       const geometry = new THREE.BoxGeometry(2, 2, 2);
       const material = new THREE.MeshNormalMaterial();
+
+      // Create a mesh object with the geometry and material
       mesh = new THREE.Mesh(geometry, material);
-      doRest(mesh, spatialActor, cleanResult, subject, filename);
+
+      // Call the doRest function with the mesh object and other necessary parameters
+      await updateSceneObject(
+        mesh,
+        spatialActor,
+        cleanResult,
+        subject,
+        filename
+      );
+      return;
     } else if (mediatype.includes("ifc")) {
-      console.log("Its an IFC!");
+      // If it's an ifc file
+      // Check if the scene doesn't already have a mesh object with the same uuid as the spatial actor
       if (!scene.getObjectByProperty("uuid", spatialActor)) {
-        console.log("Ifc is not yet here");
+        // Download the ifc file and create a url for it
         let ifc = await downloadIfc(downloadURL);
-        console.log("ifcblob:", ifc);
         const fileURL = URL.createObjectURL(ifc);
+        // Create an instance of the IFCLoader and set the wasm path
         const ifcLoader = await new IFC.IFCLoader();
         ifcLoader.ifcManager.setWasmPath("../../../");
-        console.log("load!");
+
+        // Load the ifc file with the ifcLoader
         await ifcLoader.load(fileURL, (ifcModel) => {
+          // Once loaded, assign the loaded model to the mesh object
           mesh = ifcModel;
-          console.log("after load", mesh);
-          doRest(mesh, spatialActor, cleanResult, subject, filename);
+
+          // Call the doRest function with the mesh object and other necessary parameters
+          updateSceneObject(mesh, spatialActor, cleanResult, subject, filename);
         });
+        return;
       }
     }
   }
 
-  function doRest(mesh, spatialActor, cleanResult, subject, filename) {
+  async function updateSceneObject(
+    mesh,
+    spatialActor,
+    cleanResult,
+    subject,
+    filename
+  ) {
     if (scene.getObjectByProperty("uuid", spatialActor)) {
-      // If it exists return it to its original position (retrieved from the grap)
+      // If it exists return it to its original position (retrieved from the graph)
       mesh = scene.getObjectByProperty("uuid", spatialActor);
       // First remove it from its parent and add it to the scene
       if (mesh.parent instanceof THREE.Scene === false) {
@@ -236,9 +305,11 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         scene.add(mesh);
       }
       // Reset position, rotation, and scale
-      if (mesh instanceof THREE.Mesh)
+      if (mesh instanceof THREE.Mesh) {
         setTransformFromMatrix(mesh, getMatrixFromGraph(cleanResult, subject));
+      }
       // Update Matrix
+      mesh.updateMatrix();
     } else {
       // Set name and uuid
       mesh.name = filename;
@@ -246,7 +317,6 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       // Apply Matrix and add to the scene
       mesh.applyMatrix4(getMatrixFromGraph(cleanResult, spatialActor));
       mesh.updateMatrix();
-      console.log(mesh, "add!");
       scene.add(mesh);
     }
     if (cleanResult["http://example.org/scenegraph#hasParent"]) {
@@ -255,20 +325,28 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     }
     reparentAll();
     reRenderViewer();
+    setRenderTree(generateUUID());
   }
 
+  // This function goes through all the children of the THREE.Scene and
+  // reparents them to their designated parent object if the "parent" key
+  // exists in their userData.
   function reparentAll() {
-    scene.traverse((object) => {
+    scene.children.forEach((object) => {
       if (object.userData["parent"]) {
-        if (scene.getObjectByProperty("uuid", object.userData["parent"])) {
+        // Get the parent object by its uuid
+        const parent = scene.getObjectByProperty(
+          "uuid",
+          object.userData["parent"]
+        );
+        if (parent) {
+          // Remove the object from its current parent and add it to its designated parent
           object.removeFromParent();
-          scene.add(object);
-          scene
-            .getObjectByProperty("uuid", object.userData["parent"])
-            .add(object);
+          parent.add(object);
         }
       }
     });
+    // Render the updated scene in the viewer
     reRenderViewer();
   }
 
