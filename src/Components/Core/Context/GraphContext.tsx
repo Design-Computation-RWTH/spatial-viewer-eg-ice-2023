@@ -7,6 +7,12 @@ import { ViewerContextType } from "../../../../@types/viewerTypes";
 import init from "oxigraph/web";
 import { generateUUID } from "three/src/math/MathUtils";
 import * as IFC from "web-ifc-three/IFCLoader";
+import {
+  constructTransformMatrix,
+  fileQuery,
+  selectSceneGraphActors,
+  selectTransform,
+} from "../../../Misc/Queries";
 
 export interface ChangedDocument {
   uri: string;
@@ -127,32 +133,14 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function getAllSceneGraphActors(date: Date) {
-    const query = `        
-    PREFIX sg: <http://example.org/scenegraph#>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    PREFIX prov: <http://www.w3.org/ns/prov#>
-
-    SELECT DISTINCT
-        ?s 
-    where {
-        ?s a sg:SpatialActor .
-
-        ?transform a sg:Transformation ;
-          sg:hasSpatialActor ?s ;
-          prov:generatedAtTime ?created .
-        
-        FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
-    }`;
-
-    console.log("Get Query Actors", query);
-
-    const spatialActorsresults: any[] = await oxiGraphStore.query(query);
+    const spatialActorsresults: any[] = await oxiGraphStore.query(
+      selectSceneGraphActors(date)
+    );
 
     let ids: string[] = [];
 
     for (let spatialActorResult of spatialActorsresults) {
-      spatialActorResult.forEach((value, key) => {
+      spatialActorResult.forEach((value) => {
         ids.push(value.value);
         construcSpatialActor(value.value, date);
       });
@@ -166,89 +154,28 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   async function construcSpatialActor(spatialActor: string, date: Date) {
-    let selTransform = `
-    PREFIX sg: <http://example.org/scenegraph#>
-    PREFIX ex: <http://example.org/ex#>
-    PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    PREFIX prov: <http://www.w3.org/ns/prov#>
+    let selResult: any = await oxiGraphStore.query(
+      selectTransform(spatialActor, date)
+    );
 
-    SELECT ?transform ?p ?o
+    let transformSubject: string = selResult
+      .values()
+      .next()
+      .value.values()
+      .next().value.value;
 
-      WHERE {
-        <${spatialActor}> a sg:SpatialActor .
-        <${spatialActor}> ?p ?o .
-        OPTIONAL {
-          ?transform rdf:type sg:Transformation ;
-                    sg:hasSpatialActor <${spatialActor}> ;
-                    ?prop ?obj ;
-                    prov:generatedAtTime ?created .
-          FILTER (?created <= "${date.toISOString()}"^^xsd:dateTime)
-          FILTER NOT EXISTS {
-            ?otherTransform rdf:type sg:Transformation ;
-              sg:hasSpatialActor <${spatialActor}> ;
-              prov:generatedAtTime ?otherCreated .
-            FILTER (?otherCreated > ?created && ?otherCreated <= "${date.toISOString()}"^^xsd:date)
-          }
-          BIND(?transform AS ?latestTransform)
-          BIND(?created AS ?latestCreated)
-        }
-      }
-      ORDER BY DESC(?latestCreated)
-      LIMIT 1
-
-    `;
-
-    let selResult: any = await oxiGraphStore.query(selTransform);
-
-    let selSubject: string = selResult.values().next().value.values().next()
-      .value.value;
-
-    let query = `
-      PREFIX sg: <http://example.org/scenegraph#>
-      PREFIX ex: <http://example.org/ex#>
-      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-
-      CONSTRUCT {
-          <${selSubject}> ?p ?o
-      } WHERE {
-          <${selSubject}> ?p ?o
-      }
-
-    `;
-
-    let transformResults: oxigraph.Quad[] = await oxiGraphStore.query(query);
+    let transformResults: oxigraph.Quad[] = await oxiGraphStore.query(
+      constructTransformMatrix(transformSubject)
+    );
 
     let cleanResult: any = {};
     for (let quad of transformResults) {
       cleanResult[quad.predicate.value] = quad.object.value;
     }
 
-    // SELECt query for finding all necessary information to create our scenen actors
-    let fileQuery: string = `
-      prefix sg: <http://example.org/scenegraph#>
-      prefix ex: <http://example.org/ex#>
-      prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-      prefix dcterms: <http://purl.org/dc/terms/>
-      prefix dcat: <http://www.w3.org/ns/dcat#>
-      prefix prov: <http://www.w3.org/ns/prov#>
+    // SELECT query for finding all necessary information to create our scenen actors
 
-      SELECT ?downloadURL ?mediatype ?filename
-      WHERE {   
-      <${spatialActor}> a sg:SpatialActor;
-        dcterms:title ?filename;
-        sg:hasRepresentation ?dist .
-
-      ?dist a dcat:Distribution ;
-        dcat:downloadURL ?downloadURL;
-        dcterms:mediaType ?mediatype .
-      }
-    `;
-
-    let fileResult: any[] = await oxiGraphStore.query(fileQuery);
+    let fileResult: any[] = await oxiGraphStore.query(fileQuery(spatialActor));
 
     let filename: string;
     let mediatype: string;
@@ -313,11 +240,7 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         setTransformFromMatrix(mesh, getMatrixFromGraph(cleanResult, subject));
       // Update Matrix
     } else {
-      // Create new mesh TODO: replace by retrieving mesh from graph!
-      // mesh = new THREE.Mesh(geometry, material);
       // Set name and uuid
-      console.log("no else?");
-      console.log(mesh);
       mesh.name = filename;
       mesh.uuid = spatialActor;
       // Apply Matrix and add to the scene
