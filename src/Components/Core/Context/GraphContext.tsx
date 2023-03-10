@@ -189,6 +189,10 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     // Check if the results of the transform query for this spatial actor are already cached. If not, query the oxiGraphStore for the transform data.
     let transformResults = cachedTransformResults.get(spatialActor);
     if (!transformResults) {
+      console.log(
+        " selectTransform(spatialActor, date)",
+        selectTransform(spatialActor, date)
+      );
       let selResult: any = await oxiGraphStore.query(
         selectTransform(spatialActor, date)
       );
@@ -211,7 +215,6 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     for (let quad of transformResults) {
       cleanResult[quad.predicate.value] = quad.object.value;
     }
-
     // Check if the results of the file query for this spatial actor are already cached. If not, query the oxiGraphStore for the file data.
     let fileResult = cachedFileResults.get(spatialActor);
     if (!fileResult) {
@@ -280,10 +283,12 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
           // Once loaded, assign the loaded model to the mesh object
           mesh = ifcModel;
 
-          // Call the doRest function with the mesh object and other necessary parameters
+          // Call the updateSceneObject function with the mesh object and other necessary parameters
           updateSceneObject(mesh, spatialActor, cleanResult, subject, filename);
         });
         return;
+      } else if (scene.getObjectByProperty("uuid", spatialActor)) {
+        updateSceneObject(mesh, spatialActor, cleanResult, subject, filename);
       }
     }
   }
@@ -381,7 +386,7 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     oxiGraphStore.add(
       oxigraph.quad(
         oxigraph.namedNode(newTransformURI),
-        oxigraph.namedNode(`http://example.org/scenegraph#targets`),
+        oxigraph.namedNode(`http://example.org/scenegraph#hasSpatialActor`),
         oxigraph.namedNode(mesh.uuid),
         oxigraph.defaultGraph()
       )
@@ -389,7 +394,19 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     oxiGraphStore.add(
       oxigraph.quad(
         oxigraph.namedNode(newTransformURI),
-        oxigraph.namedNode(`http://example.org/scenegraph#created`),
+        oxigraph.namedNode(`http://www.w3.org/ns/prov#generatedAtTime`),
+        oxigraph.literal(
+          now,
+          oxigraph.namedNode("http://www.w3.org/2001/XMLSchema#dateTime")
+        ),
+        oxigraph.defaultGraph()
+      )
+    );
+    // Add the current time in the timeline here!
+    oxiGraphStore.add(
+      oxigraph.quad(
+        oxigraph.namedNode(newTransformURI),
+        oxigraph.namedNode(`http://www.w3.org/ns/prov#atTime`),
         oxigraph.literal(
           now,
           oxigraph.namedNode("http://www.w3.org/2001/XMLSchema#dateTime")

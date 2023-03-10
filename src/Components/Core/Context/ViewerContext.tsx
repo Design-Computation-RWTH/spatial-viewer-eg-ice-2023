@@ -31,7 +31,6 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
   function reRenderViewer() {
     renderer.render(scene, currentCamera);
-    console.log("Render");
   }
 
   function reparentMesh(
