@@ -94,3 +94,18 @@ export function constructTransformMatrix(transformSubject: string): string {
 
     `;
 }
+
+export function selectDates(): string {
+  return `        
+      PREFIX sg: <http://example.org/scenegraph#>
+      PREFIX ex: <http://example.org/ex#>
+      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+      PREFIX prov: <http://www.w3.org/ns/prov#>
+      
+      SELECT ?transformation ?created WHERE {
+        ?transformation rdf:type sg:Transformation ;
+                         prov:generatedAtTime ?created .
+      } ORDER BY DESC(?created)
+      `;
+}

@@ -1,91 +1,94 @@
-prefix sg: <http://example.org/scenegraph#>
-prefix ex: <http://example.org/ex#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-prefix dcterms: <http://purl.org/dc/terms/>
-prefix dcat: <http://www.w3.org/ns/dcat#>
-prefix prov: <http://www.w3.org/ns/prov#>
-
-
-ex:file_1_spatial_actor a sg:SpatialActor;
-    dcterms:title "File 1";
-    sg:hasRepresentation ex:file_1_v1_distribution .
-
-ex:file_1_v1_distribution a dcat:Distribution ;
-    dcat:downloadURL <http://localhost:3001/files/Example.ifc> ;
-    prov:atTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
-    dcterms:mediaType "ifc" .
-
-ex:transformation_1_1 rdf:type sg:Transformation ;
-    prov:generatedAtTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
-    prov:atTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
-    sg:hasSpatialActor  ex:file_1_spatial_actor ;
-    sg:m1 1 ;
-    sg:m2 0 ;
-    sg:m3 0 ;
-    sg:m4 0 ;
-    sg:m5 0 ;
-    sg:m6 1 ;
-    sg:m7 0 ;
-    sg:m8 0 ;
-    sg:m9 0 ;
-    sg:m10 0 ;
-    sg:m11 1 ;
-    sg:m12 0 ;
-    sg:m13 0 ;
-    sg:m14 0 ;
-    sg:m15 0 ;
-    sg:m16 1 .
-
-
-ex:transformation_1_2 rdf:type sg:Transformation ;
-    prov:generatedAtTime "2023-02-26T12:33:56"^^xsd:dateTime ;
-    prov:atTime "2023-02-26T12:33:56"^^xsd:dateTime ;
-    sg:hasSpatialActor  ex:file_1_spatial_actor ;
-    sg:m1 1 ;
-    sg:m2 0 ;
-    sg:m3 0 ;
-    sg:m4 0 ;
-    sg:m5 0 ;
-    sg:m6 1 ;
-    sg:m7 0 ;
-    sg:m8 0 ;
-    sg:m9 0 ;
-    sg:m10 0 ;
-    sg:m11 1 ;
-    sg:m12 0 ;
-    sg:m13 1 ;
-    sg:m14 2 ;
-    sg:m15 3 ;
-    sg:m16 1 .
-
-ex:file_2_v1_distribution a dcat:Distribution ;
-    dcat:downloadURL <http://localhost:3001/files/Chair_1.png> ;
-    dcterms:mediaType <https://www.iana.org/assignments/media-types/image/png> .
-
-ex:file_2_spatial_actor a sg:SpatialActor;
-    dcterms:title       "File 2";
-    sg:hasRepresentation ex:file_2_v1_distribution .
-
-ex:transformation_2_1 rdf:type sg:Transformation ;
-    prov:generatedAtTime "2023-02-25T12:33:56"^^xsd:dateTime ;
-    prov:atTime "2023-02-25T12:33:56"^^xsd:dateTime ;
-    sg:hasSpatialActor  ex:file_2_spatial_actor ;
-    sg:hasParent ex:file_1_spatial_actor;
-    sg:m1 1 ;
-    sg:m2 0 ;
-    sg:m3 0 ;
-    sg:m4 0 ;
-    sg:m5 0 ;
-    sg:m6 1 ;
-    sg:m7 0 ;
-    sg:m8 0 ;
-    sg:m9 0 ;
-    sg:m10 0 ;
-    sg:m11 1 ;
-    sg:m12 0 ;
-    sg:m13 4 ;
-    sg:m14 4 ;
-    sg:m15 4 ;
-    sg:m16 1 .
+<http://example.org/ex#file_1_v1_distribution> <http://purl.org/dc/terms/mediaType> "ifc" .
+<http://example.org/ex#file_1_v1_distribution> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/dcat#Distribution> .
+<http://example.org/ex#file_1_v1_distribution> <http://www.w3.org/ns/prov#atTime> "2023-02-24T12:32:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#file_1_v1_distribution> <http://www.w3.org/ns/dcat#downloadURL> <http://localhost:3001/files/Example.ifc> .
+<http://example.org/ex#file_1_spatial_actor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/scenegraph#SpatialActor> .
+<http://example.org/ex#file_1_spatial_actor> <http://purl.org/dc/terms/title> "File 1" .
+<http://example.org/ex#file_1_spatial_actor> <http://example.org/scenegraph#hasRepresentation> <http://example.org/ex#file_1_v1_distribution> .
+<http://example.org/ex#file_2_v1_distribution> <http://purl.org/dc/terms/mediaType> <https://www.iana.org/assignments/media-types/image/png> .
+<http://example.org/ex#file_2_v1_distribution> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/ns/dcat#Distribution> .
+<http://example.org/ex#file_2_v1_distribution> <http://www.w3.org/ns/dcat#downloadURL> <http://localhost:3001/files/Chair_1.png> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m3> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m4> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m6> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m1> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/scenegraph#Transformation> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m11> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m12> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m9> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m13> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m8> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m5> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m2> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m14> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://www.w3.org/ns/prov#atTime> "2023-02-25T12:33:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m16> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://www.w3.org/ns/prov#generatedAtTime> "2023-02-25T12:33:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#hasSpatialActor> <http://example.org/ex#file_2_spatial_actor> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#hasParent> <http://example.org/ex#file_1_spatial_actor> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m15> "4"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m10> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_2_1> <http://example.org/scenegraph#m7> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m3> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m4> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m6> "1.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m1> "1.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/scenegraph#Transformation> .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m11> "1.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m12> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m9> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m13> "4.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m8> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m5> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m2> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m14> "4.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m16> "1.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#targets> <http://example.org/ex#file_2_spatial_actor> .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#hasParent> <http://example.org/ex#file_1_spatial_actor> .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m15> "-18.816" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m10> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#m7> "0.000" .
+<http://example.org/ex#B8804F6C-475B-4DFB-AC24-39E197005F51> <http://example.org/scenegraph#created> "2023-03-10T11:29:32.54Z"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m3> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m4> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m6> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m1> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/scenegraph#Transformation> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m11> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m12> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m9> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m13> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m8> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m5> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m2> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m14> "2"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://www.w3.org/ns/prov#atTime> "2023-02-26T12:33:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m16> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://www.w3.org/ns/prov#generatedAtTime> "2023-02-26T12:33:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#hasSpatialActor> <http://example.org/ex#file_1_spatial_actor> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m15> "3"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m10> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_2> <http://example.org/scenegraph#m7> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#file_2_spatial_actor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/scenegraph#SpatialActor> .
+<http://example.org/ex#file_2_spatial_actor> <http://purl.org/dc/terms/title> "File 2" .
+<http://example.org/ex#file_2_spatial_actor> <http://example.org/scenegraph#hasRepresentation> <http://example.org/ex#file_2_v1_distribution> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m3> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m4> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m6> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m1> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://example.org/scenegraph#Transformation> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m11> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m12> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m9> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m13> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m8> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m5> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m2> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m14> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://www.w3.org/ns/prov#atTime> "2023-02-24T12:32:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m16> "1"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://www.w3.org/ns/prov#generatedAtTime> "2023-02-24T12:32:56"^^<http://www.w3.org/2001/XMLSchema#dateTime> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#hasSpatialActor> <http://example.org/ex#file_1_spatial_actor> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m15> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m10> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .
+<http://example.org/ex#transformation_1_1> <http://example.org/scenegraph#m7> "0"^^<http://www.w3.org/2001/XMLSchema#integer> .

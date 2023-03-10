@@ -10,6 +10,7 @@ import * as IFC from "web-ifc-three/IFCLoader";
 import {
   constructTransformMatrix,
   fileQuery,
+  selectDates,
   selectSceneGraphActors,
   selectTransform,
 } from "../../../Misc/Queries";
@@ -96,15 +97,22 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return repository;
   }
 
+  /**
+   * Recursively remove a mesh from an object and its children.
+   * @param {THREE.Object3D} object - The object to remove the mesh from.
+   * @param {THREE.Mesh} mesh - The mesh to remove.
+   */
   function removeMesh(object, mesh) {
-    if (object.children) {
-      for (let i = object.children.length - 1; i >= 0; i--) {
-        const child = object.children[i];
-        if (child === mesh) {
-          object.remove(child);
-        } else {
-          removeMesh(child, mesh);
-        }
+    if (!object.children) return; // If the object has no children, return.
+
+    for (let i = object.children.length - 1; i >= 0; i--) {
+      const child = object.children[i];
+
+      if (child === mesh) {
+        // If the child is the mesh we want to remove.
+        object.remove(child);
+      } else {
+        removeMesh(child, mesh); // Recursively check the child's children.
       }
     }
   }
@@ -118,19 +126,7 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   async function getAllDates(): Promise<any[]> {
     let dates = [];
     if (oxiGraphStore) {
-      const findDatesQuery = `        
-      PREFIX sg: <http://example.org/scenegraph#>
-      PREFIX ex: <http://example.org/ex#>
-      PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-      PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-      PREFIX prov: <http://www.w3.org/ns/prov#>
-      
-      SELECT ?transformation ?created WHERE {
-        ?transformation rdf:type sg:Transformation ;
-                         prov:generatedAtTime ?created .
-      } ORDER BY DESC(?created)
-      `;
-      const dateResults: any[] = await oxiGraphStore.query(findDatesQuery);
+      const dateResults: any[] = await oxiGraphStore.query(selectDates());
 
       for (let date of dateResults) {
         date.forEach((value, key) => {
@@ -143,6 +139,10 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     return dates;
   }
 
+  /**
+   * This function retrieves all scene graph actors for a given date from the oxiGraphStore and constructs them.
+   * @param {Date} date - The date from that the scene should get constructed
+   */
   async function getAllSceneGraphActors(date: Date) {
     // await the executions of all queries
     await querySceneGraphActors(date);
@@ -150,7 +150,6 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     reparentAll();
   }
 
-  // This function retrieves all scene graph actors for a given date from the oxiGraphStore and constructs them.
   async function querySceneGraphActors(date: Date) {
     // Query the oxiGraphStore for all scene graph actors for the given date.
     const spatialActorsresults: any[] = await oxiGraphStore.query(
@@ -455,45 +454,31 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       });
   }
 
+  // This function takes a map of key-value pairs and a URI and returns a THREE.Matrix4 object.
   function getMatrixFromGraph(map: any, uri: string): THREE.Matrix4 {
+    // Create a new THREE.Matrix4 object.
     let matrix: THREE.Matrix4 = new THREE.Matrix4();
-    for (let key in map) {
-      if (key === "http://example.org/scenegraph#m1")
-        matrix.elements[0] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m2")
-        matrix.elements[1] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m3") {
-        matrix.elements[2] = parseFloat(map[key]);
-      } else if (key === "http://example.org/scenegraph#m4")
-        matrix.elements[3] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m5")
-        matrix.elements[4] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m6")
-        matrix.elements[5] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m7")
-        matrix.elements[6] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m8")
-        matrix.elements[7] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m9")
-        matrix.elements[8] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m10")
-        matrix.elements[9] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m11")
-        matrix.elements[10] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m12")
-        matrix.elements[11] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m13")
-        matrix.elements[12] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m14")
-        matrix.elements[13] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m15")
-        matrix.elements[14] = parseFloat(map[key]);
-      else if (key === "http://example.org/scenegraph#m16")
-        matrix.elements[15] = parseFloat(map[key]);
+    // Get the keys of the map.
+    const keys = Object.keys(map);
+    // Loop through keys representing the matrix elements.
+    for (let i = 1; i <= 16; i++) {
+      // Create a key representing the current matrix element.
+      const key = `http://example.org/scenegraph#m${i}`;
+      // Get the index of the key in the keys array.
+      const index = keys.indexOf(key);
+      // If the key exists in the map, set the corresponding matrix element.
+      if (index !== -1) {
+        matrix.elements[i - 1] = parseFloat(map[key]);
+      }
     }
+    // Return the matrix.
     return matrix;
   }
 
+  /**
+   * Recursively remove a mesh from an object and its children.
+   * @param {string} query - The SPARQL query that should be sent to the server
+   */
   async function simpleQuery(query: string): Promise<any[]> {
     const results: any[] = await oxiGraphStore.query(query);
 
@@ -501,34 +486,28 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   }
 
   function uriToPrefixString(uri: string): string {
-    let newString: string = uri;
+    // Create an object with the URI prefixes and their replacements
+    const prefixMap = {
+      "http://example.org/scenegraph#": "sg:",
+      "http://example.org/ex#": "ex:",
+      "http://www.w3.org/1999/02/22-rdf-syntax-ns#": "rdf:",
+      "http://www.w3.org/2000/01/rdf-schema#": "rdfs:",
+      "http://www.w3.org/2001/XMLSchema#": "xsd:",
+      "http://purl.org/dc/terms/": "dcterms:",
+      "https://w3id.org/omg#": "omg:",
+    };
 
-    if (uri.includes("http://example.org/scenegraph#"))
-      newString = newString.replace("http://example.org/scenegraph#", "sg:");
-    else if (uri.includes("http://example.org/ex#"))
-      newString = newString.replace("http://example.org/ex#", "ex:");
-    else if (uri.includes("http://www.w3.org/1999/02/22-rdf-syntax-ns#"))
-      newString = newString.replace(
-        "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-        "rdf:"
-      );
-    else if (uri.includes("http://www.w3.org/2000/01/rdf-schema#"))
-      newString = newString.replace(
-        "http://www.w3.org/2000/01/rdf-schema#",
-        "rdfs:"
-      );
-    else if (uri.includes("http://www.w3.org/2001/XMLSchema#"))
-      newString = newString.replace(
-        "http://www.w3.org/2001/XMLSchema#",
-        "xsd:"
-      );
-    else if (uri.includes("http://purl.org/dc/terms/"))
-      newString = newString.replace("http://purl.org/dc/terms/", "dcterms::");
-    else if (uri.includes("https://w3id.org/omg#"))
-      newString = newString.replace("https://w3id.org/omg#", "omg:");
+    // Loop through the keys in the prefixMap object and replace the URI if found
+    for (const key in prefixMap) {
+      if (uri.includes(key)) {
+        return uri.replace(key, prefixMap[key]);
+      }
+    }
 
-    return newString;
+    // Return the original URI if no matches were found
+    return uri;
   }
+
   return (
     <GraphContext.Provider
       value={{
