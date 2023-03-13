@@ -1,11 +1,19 @@
-import { Button, ScrollArea, Stack, Table, Title } from "@mantine/core";
+import {
+  Button,
+  ScrollArea,
+  Stack,
+  Table,
+  Title,
+  Group,
+  ActionIcon,
+} from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
 import { Coordinates } from "../../Coordinates/Coordinates";
 import { ViewerContext } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 import { showNotification, updateNotification } from "@mantine/notifications";
-import { CircleCheck } from "tabler-icons-react";
+import { CircleCheck, Upload, Download } from "tabler-icons-react";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
 
 export function DetailsTab() {
@@ -66,7 +74,17 @@ export function DetailsTab() {
 
   return (
     <Stack style={{ height: "100%", width: "100%" }} justify="space-between">
-      <Title order={2}>Scene</Title>
+      <Group position="apart">
+        <Title order={2}>Scene</Title>
+        <Group>
+          <ActionIcon color="blue" size="sm">
+            <Download />
+          </ActionIcon>
+          <ActionIcon color="blue" size="sm">
+            <Upload />
+          </ActionIcon>
+        </Group>
+      </Group>
       <ScrollArea style={{ height: "100%", width: "100%" }} type="always">
         <MyTreeView />
       </ScrollArea>
@@ -78,6 +96,9 @@ export function DetailsTab() {
       >
         <Stack>
           <Coordinates />
+          <Button variant="outline" onClick={updateDocument}>
+            Update Document
+          </Button>
           <Table striped highlightOnHover withColumnBorders>
             <thead>
               <tr key={"details-table-header"}>
@@ -104,7 +125,6 @@ export function DetailsTab() {
               </tr>
             </tbody>
           </Table>
-          <Button onClick={updateDocument}>Update Document</Button>
         </Stack>
       </ScrollArea>
     </Stack>

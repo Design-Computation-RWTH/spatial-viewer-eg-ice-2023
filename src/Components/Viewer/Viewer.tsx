@@ -181,5 +181,14 @@ export const ViewerComponent = memo(() => {
     reRenderViewer();
   }
 
-  return <div style={{ height: "100%" }} id="ifc-viewer-container"></div>;
+  // return <div style={{ height: "100%" }} id="ifc-viewer-container"></div>;
+  return (
+    <div
+      style={{
+        height: "100%",
+        width: "100%",
+      }}
+      id="ifc-viewer-container"
+    ></div>
+  );
 });

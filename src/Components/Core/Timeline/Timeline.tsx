@@ -161,73 +161,68 @@ export function Timeline() {
   }
 
   return (
-    <div
-      style={{
-        position: "relative",
-        width: "60%",
-        left: "0",
-        right: "0",
-        bottom: "12%",
-        marginLeft: "auto",
-        marginRight: "auto",
-      }}
-    >
-      <Paper withBorder shadow="xl" radius="xl" p="xl" color="grey">
-        <Group>
-          <Menu shadow="md" width={200}>
-            <Menu.Target>
-              <ActionIcon color="blue" size="lg" radius="xl" variant="filled">
-                <Menu2 size={26} />
-              </ActionIcon>
-            </Menu.Target>
+    // <div
+    //   style={{
+    //     position: "relative",
+    //     width: "60%",
+    //     left: "0",
+    //     right: "0",
+    //     bottom: "12%",
+    //     marginLeft: "auto",
+    //     marginRight: "auto",
+    //   }}
+    // >
+    <Paper withBorder shadow="xl" radius="lg" p="xl" color="grey">
+      <Group spacing="xs" style={{ gap: "4px" }} grow>
+        <Menu shadow="md" width={200}>
+          <Menu.Target>
+            <ActionIcon color="blue" size="lg" radius="xl">
+              <Menu2 />
+            </ActionIcon>
+          </Menu.Target>
 
-            <Menu.Dropdown>
-              <Menu.Label>Application</Menu.Label>
-              <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
-              <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
-              <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
-              <Menu.Item
-                icon={<Search size={14} />}
-                rightSection={
-                  <Text size="xs" color="dimmed">
-                    ⌘K
-                  </Text>
-                }
-              >
-                Search
-              </Menu.Item>
+          <Menu.Dropdown>
+            <Menu.Label>Application</Menu.Label>
+            <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
+            <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
+            <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
+            <Menu.Item
+              icon={<Search size={14} />}
+              rightSection={
+                <Text size="xs" color="dimmed">
+                  ⌘K
+                </Text>
+              }
+            >
+              Search
+            </Menu.Item>
 
-              <Menu.Divider />
+            <Menu.Divider />
 
-              <Menu.Label>Danger zone</Menu.Label>
-              <Menu.Item icon={<ArrowLeftRight size={14} />}>
-                Transfer my data
-              </Menu.Item>
-              <Menu.Item color="red" icon={<Trash size={14} />}>
-                Delete my account
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
-          <ActionIcon
-            onClick={loadSceneGraph}
-            color="blue"
-            size="lg"
-            radius="xl"
-            variant="filled"
-          >
-            <Reload size={26} />
-          </ActionIcon>
-          <Slider
-            style={{ width: "80%" }}
-            size="xl"
-            radius="xl"
-            onChange={setSliderValue}
-            label={valueLabelFormat}
-            marks={setMarksForTime()}
-            value={currentDatePercentage}
-          />
-        </Group>
-      </Paper>
-    </div>
+            <Menu.Label>Danger zone</Menu.Label>
+            <Menu.Item icon={<ArrowLeftRight size={14} />}>
+              Transfer my data
+            </Menu.Item>
+            <Menu.Item color="red" icon={<Trash size={14} />}>
+              Delete my account
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+
+        <Slider
+          style={{ minWidth: "70%", maxWidth: "80%", width: "70%" }}
+          size="xl"
+          radius="xl"
+          onChange={setSliderValue}
+          label={valueLabelFormat}
+          marks={setMarksForTime()}
+          value={currentDatePercentage}
+        />
+        <ActionIcon onClick={loadSceneGraph} color="blue" size="lg" radius="xl">
+          <Reload />
+        </ActionIcon>
+      </Group>
+    </Paper>
+    // </div>
   );
 }

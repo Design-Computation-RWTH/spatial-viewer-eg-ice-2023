@@ -15,7 +15,7 @@ export const ViewerContext = createContext<ViewerContextType | null>(null);
 
 const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [scene, setScene] = useState<THREE.Scene | null>();
-  const [sidebarWidth, setSidebarWidth] = useState<string>("30%");
+  const [sidebarWidth, setSidebarWidth] = useState<string>("500px");
   const [selMesh, setSelMesh] = useState<THREE.Mesh | null>();
   const [renderer, setRenderer] = useState<THREE.Renderer | null>();
   const [currentCamera, setCurrentCamera] =
