@@ -1,5 +1,5 @@
 import { Navbar } from "@mantine/core";
-import { BinaryTree, ChartDots3, Upload } from "tabler-icons-react";
+import { BinaryTree, ChartDots3, Graph, Upload } from "tabler-icons-react";
 import { HomeTab } from "./HomeTab";
 import { Tabs } from "@mantine/core";
 import { DetailsTab } from "./DetailsTab";
@@ -7,6 +7,7 @@ import { QueryTab } from "./QueryTab";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
 import { useContext } from "react";
 import { ViewerContext } from "../Context/ViewerContext";
+import { SparqlTab } from "./SPARQLTab";
 
 export function CoreNavbar() {
   const { sidebarWidth } = useContext(ViewerContext) as ViewerContextType;
@@ -20,7 +21,7 @@ export function CoreNavbar() {
         height: "90%",
         width: sidebarWidth,
         overflow: "hidden",
-        top: "5%",
+        top: "5%"
         // position: "relative",
       }}
     >
@@ -54,7 +55,7 @@ export function CoreNavbar() {
               width: "100%",
               height: "100%",
               maxWidth: "100%",
-              maxHeight: "100%",
+              maxHeight: "100%"
             }}
           >
             <DetailsTab />
@@ -66,7 +67,7 @@ export function CoreNavbar() {
               width: "100%",
               height: "100%",
               maxWidth: "100%",
-              maxHeight: "100%",
+              maxHeight: "100%"
             }}
           >
             <HomeTab />
@@ -78,10 +79,10 @@ export function CoreNavbar() {
               width: "100%",
               height: "100%",
               maxWidth: "100%",
-              maxHeight: "100%",
+              maxHeight: "100%"
             }}
           >
-            <QueryTab />
+            <SparqlTab />
           </Tabs.Panel>
         </Tabs>
       </Navbar.Section>

@@ -206,6 +206,7 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       transformResults = await oxiGraphStore.query(
         constructTransformMatrix(transformSubject)
       );
+
       // Cache the results of the transform query for this spatial actor.
       cachedTransformResults.set(spatialActor, transformResults);
     }
