@@ -1,9 +1,8 @@
 import { Navbar } from "@mantine/core";
-import { BinaryTree, ChartDots3, Graph, Upload } from "tabler-icons-react";
+import { BinaryTree, ChartDots3, Upload } from "tabler-icons-react";
 import { HomeTab } from "./HomeTab";
 import { Tabs } from "@mantine/core";
 import { DetailsTab } from "./DetailsTab";
-import { QueryTab } from "./QueryTab";
 import { ViewerContextType } from "../../../../@types/viewerTypes";
 import { useContext } from "react";
 import { ViewerContext } from "../Context/ViewerContext";
