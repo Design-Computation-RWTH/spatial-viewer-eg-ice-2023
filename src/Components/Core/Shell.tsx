@@ -3,13 +3,10 @@ import { useContext, useEffect, useState } from "react";
 import {
   ActionIcon,
   AppShell,
-  Center,
   Footer,
   Group,
   Header,
-  SegmentedControl,
   Navbar,
-  Aside,
   Text,
   useMantineColorScheme,
   Burger,
@@ -18,17 +15,9 @@ import {
 } from "@mantine/core";
 import { CoreNavbar } from "./Navbar/Nav";
 import { ViewerComponent } from "../Viewer/Viewer";
-import {
-  LayoutSidebar,
-  LayoutSidebarLeftExpand,
-  LayoutSidebarRightExpand,
-  MoonStars,
-  SunHigh,
-} from "tabler-icons-react";
+import { MoonStars, SunHigh } from "tabler-icons-react";
 import { Timeline } from "./Timeline/Timeline";
 import { GraphContext, GraphContextType } from "./Context/GraphContext";
-import { ViewerContext } from "./Context/ViewerContext";
-import { ViewerContextType } from "../../../@types/viewerTypes";
 
 export const Shell = () => {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -39,10 +28,6 @@ export const Shell = () => {
   const { initOxi, setOxiGraphStore } = useContext(
     GraphContext
   ) as GraphContextType;
-
-  const { sidebarWidth, setSidebarWidth } = useContext(
-    ViewerContext
-  ) as ViewerContextType;
 
   useEffect(() => {
     initGraph();
