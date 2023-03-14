@@ -6,17 +6,19 @@ import {
   Title,
   Group,
   ActionIcon,
+  FileButton,
 } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { Coordinates } from "../../Coordinates/Coordinates";
 import { ViewerContext, ViewerContextType } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 import { showNotification, updateNotification } from "@mantine/notifications";
+import * as IFC from "web-ifc-three/IFCLoader";
 import { CircleCheck, Upload, Download } from "tabler-icons-react";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
 
 export function DetailsTab() {
-  const { selMesh, reRenderViewer } = useContext(
+  const { selMesh, scene, reRenderViewer, setRenderTree } = useContext(
     ViewerContext
   ) as ViewerContextType;
 
@@ -32,6 +34,8 @@ export function DetailsTab() {
     position: { x: 0, y: 0, z: 0 },
   });
 
+  const [newDocument, setNewDocument] = useState<File | null>();
+
   useEffect(() => {
     if (selMesh) {
       setMesh(selMesh);
@@ -45,6 +49,24 @@ export function DetailsTab() {
       });
     }
   }, [selMesh]);
+
+  useEffect(() => {
+    if (newDocument) {
+      console.log("File Loaded");
+      console.log(newDocument.name);
+      if (newDocument.name.includes(".ifc")) {
+        const fileURL = URL.createObjectURL(newDocument);
+        const ifcLoader = new IFC.IFCLoader();
+        ifcLoader.ifcManager.setWasmPath("../../../");
+        ifcLoader.load(fileURL, (ifcModel) => {
+          ifcModel.name = newDocument.name;
+          scene.add(ifcModel);
+          setRenderTree(ifcModel.id.toString());
+          reRenderViewer();
+        });
+      }
+    }
+  }, [newDocument]);
 
   async function updateDocument(event) {
     if (selMesh) {
@@ -79,9 +101,13 @@ export function DetailsTab() {
           <ActionIcon color="blue" size="sm">
             <Download />
           </ActionIcon>
-          <ActionIcon color="blue" size="sm">
-            <Upload />
-          </ActionIcon>
+          <FileButton onChange={setNewDocument} accept="ifc">
+            {(props) => (
+              <ActionIcon {...props} color="blue" size="sm">
+                <Upload />
+              </ActionIcon>
+            )}
+          </FileButton>
         </Group>
       </Group>
       <ScrollArea style={{ height: "100%", width: "100%" }} type="always">

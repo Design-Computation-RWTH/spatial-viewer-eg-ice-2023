@@ -159,21 +159,21 @@ export function Coordinates() {
           size="xs"
         />
         <NumberInput
-          precision={2}
+          precision={3}
           value={scale.x}
           onChange={setXSca}
           icon={<Text color={"red"}>X</Text>}
           size="xs"
         />
         <NumberInput
-          precision={2}
+          precision={3}
           value={scale.y}
           onChange={setYSca}
           icon={<Text color={"green"}>Y</Text>}
           size="xs"
         />
         <NumberInput
-          precision={2}
+          precision={3}
           value={scale.z}
           onChange={setZSca}
           icon={<Text color={"blue"}>Z</Text>}

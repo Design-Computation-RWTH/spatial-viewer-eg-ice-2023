@@ -39,123 +39,6 @@ export const Shell = () => {
   }
 
   return (
-    // <AppShell
-    //   fixed
-    //   styles={(theme) => ({
-    //     root: {
-    //       height: "100vh",
-    //       width: "100vw",
-    //     },
-    //     main: {
-    //       display: "flex",
-    //       alignContent: "stretch",
-    //       justifyContent: "space-evenly",
-    //       alignItems: "stretch",
-    //       flexDirection: "column",
-    //       // position: "relative",
-    //       width: "100%",
-    //       height: "100%",
-    //       minHeight: "90%",
-    //       // paddingLeft: "30%",
-    //       backgroundColor:
-    //         theme.colorScheme === "dark"
-    //           ? theme.colors.dark[8]
-    //           : theme.colors.gray[0],
-    //     },
-    //     body: {
-    //       height: "90%",
-    //       width: "100%",
-    //       maxHeight: "100%",
-    //       maxWidth: "100%",
-    //     },
-    //   })}
-    //   header={
-    //     <Header height={"5%"} style={{ position: "relative" }} p="md">
-    //       <div
-    //         style={{
-    //           display: "flex",
-    //           alignItems: "center",
-    //           height: "100%",
-    //           justifyContent: "space-between",
-    //         }}
-    //       >
-    //         <Text size="xl" weight="bolder">
-    //           spatial-viewer
-    //         </Text>
-    //         <Group>
-    //           <ActionIcon
-    //             variant="transparent"
-    //             color={dark ? "blue" : "blue"}
-    //             onClick={() => toggleColorScheme()}
-    //             title="Toggle Color Scheme"
-    //           >
-    //             {dark ? <SunHigh /> : <MoonStars />}
-    //           </ActionIcon>
-    //         </Group>
-    //       </div>
-    //     </Header>
-    //   }
-    //   navbar={<CoreNavbar />}
-    //   footer={
-    //     <Footer
-    //       height={"5%"}
-    //       style={{
-    //         position: "relative",
-    //         display: "flex",
-    //         justifyContent: "center",
-    //         alignItems: "center",
-    //       }}
-    //       p="md"
-    //     >
-    //       <Group position="center" spacing="xl">
-    //         <SegmentedControl
-    //           defaultValue={sidebarWidth}
-    //           onChange={setSidebarWidth}
-    //           data={[
-    //             {
-    //               label: (
-    //                 <Center>
-    //                   <LayoutSidebarLeftExpand />
-    //                 </Center>
-    //               ),
-    //               value: "100%",
-    //             },
-    //             {
-    //               label: (
-    //                 <Center>
-    //                   <LayoutSidebar />
-    //                 </Center>
-    //               ),
-    //               value: "30%",
-    //             },
-    //             {
-    //               label: (
-    //                 <Center>
-    //                   <LayoutSidebarRightExpand />
-    //                 </Center>
-    //               ),
-    //               value: "0%",
-    //             },
-    //           ]}
-    //         ></SegmentedControl>
-    //       </Group>
-    //     </Footer>
-    //   }
-    // >
-    //   <div style={{ height: "100%", width: "100%" }}>
-    //     <ViewerComponent />
-    //     <div
-    //       style={{
-    //         position: "fixed",
-    //         left: "40%",
-    //         bottom: "10%",
-    //         width: "60%",
-    //       }}
-    //     >
-    //       <Timeline />
-    //     </div>
-    //   </div>
-    // </AppShell>
     <div>
       <AppShell
         styles={{
@@ -242,7 +125,7 @@ export const Shell = () => {
         <div
           style={{
             width: "40%",
-            height: "8%",
+            height: "10%",
             position: "relative",
             bottom: "250px",
             marginLeft: "50%",

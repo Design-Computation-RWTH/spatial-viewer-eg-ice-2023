@@ -11,9 +11,16 @@ export interface ChangedDocument {
   initialLocation: THREE.Matrix4;
 }
 
+export enum ClickMode {
+  Select = "Select",
+  Measure = "Measure",
+}
+
 export type ViewerContextType = {
   scene: THREE.Scene | null;
   setScene: Dispatch<SetStateAction<THREE.Scene>>;
+  clickMode: ClickMode;
+  setClickMode: Dispatch<SetStateAction<ClickMode>>;
   sidebarWidth: string;
   setSidebarWidth: Dispatch<SetStateAction<string>>;
   selMesh: THREE.Mesh | null;
@@ -52,6 +59,7 @@ export const ViewerContext = createContext<ViewerContextType | null>(null);
 
 const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [scene, setScene] = useState<THREE.Scene | null>();
+  const [clickMode, setClickMode] = useState<ClickMode>(ClickMode.Select);
   const [sidebarWidth, setSidebarWidth] = useState<string>("500px");
   const [selMesh, setSelMesh] = useState<THREE.Mesh | null>();
   const [renderer, setRenderer] = useState<THREE.Renderer | null>();
@@ -170,6 +178,8 @@ const ViewerProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       value={{
         scene,
         setScene,
+        clickMode,
+        setClickMode,
         sidebarWidth,
         setSidebarWidth,
         selMesh,

@@ -164,7 +164,13 @@ export function Timeline() {
           marks={setMarksForTime()}
           value={currentDatePercentage}
         />
-        <ActionIcon onClick={loadSceneGraph} color="blue" size="lg" radius="xl">
+        <ActionIcon
+          style={{ zIndex: 2 }}
+          onClick={loadSceneGraph}
+          color="blue"
+          size="lg"
+          radius="xl"
+        >
           <Reload />
         </ActionIcon>
       </Group>

@@ -13,7 +13,7 @@ ex:file_1_spatial_actor a sg:SpatialActor;
     sg:hasRepresentation ex:file_1_v1_distribution .
 
 ex:file_1_v1_distribution a dcat:Distribution ;
-    dcat:downloadURL <http://localhost:3001/files/Example.ifc>  ;
+    dcat:downloadURL <http://localhost:3001/files/Lehrstuhl.ifc>  ;
     prov:atTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
     dcterms:mediaType "ifc" .
 
