@@ -2,8 +2,10 @@
 import { Button, Text } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import * as THREE from "three";
-import { ViewerContextType } from "../../../../@types/viewerTypes";
-import { ViewerContext } from "../../Core/Context/ViewerContext";
+import {
+  ViewerContext,
+  ViewerContextType,
+} from "../../Core/Context/ViewerContext";
 
 interface TreeButtonProps {
   buttonText: string;

@@ -8,9 +8,8 @@ import {
   ActionIcon,
 } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { ViewerContextType } from "../../../../@types/viewerTypes";
 import { Coordinates } from "../../Coordinates/Coordinates";
-import { ViewerContext } from "../Context/ViewerContext";
+import { ViewerContext, ViewerContextType } from "../Context/ViewerContext";
 import { MyTreeView } from "../TreeView/TreeView";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { CircleCheck, Upload, Download } from "tabler-icons-react";

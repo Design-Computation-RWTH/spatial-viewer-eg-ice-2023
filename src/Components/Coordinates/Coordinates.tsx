@@ -1,8 +1,10 @@
 import { Group, NumberInput, Select, Stack, Text } from "@mantine/core";
 import * as THREE from "three";
 import { useContext, useEffect, useState } from "react";
-import { ViewerContext } from "../Core/Context/ViewerContext";
-import { ViewerContextType } from "../../../@types/viewerTypes";
+import {
+  ViewerContext,
+  ViewerContextType,
+} from "../Core/Context/ViewerContext";
 
 export function Coordinates() {
   const { selMesh, reRenderViewer, addChangedDocument } = useContext(

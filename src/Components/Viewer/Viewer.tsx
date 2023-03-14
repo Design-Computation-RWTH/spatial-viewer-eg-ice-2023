@@ -6,8 +6,10 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as BVH from "three-mesh-bvh";
-import { ViewerContextType } from "../../../@types/viewerTypes";
-import { ViewerContext } from "../Core/Context/ViewerContext";
+import {
+  ViewerContext,
+  ViewerContextType,
+} from "../Core/Context/ViewerContext";
 
 // based on: https://github.com/mrdoob/three.js/blob/master/examples/misc_controls_transform.html
 // example: https://observablehq.com/@vicapow/three-js-transformcontrols-example

@@ -3,8 +3,10 @@ import { ActionIcon } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { GridDots, Lamp, Line, ThreeDCubeSphere } from "tabler-icons-react";
 import * as THREE from "three";
-import { ViewerContextType } from "../../../../@types/viewerTypes";
-import { ViewerContext } from "../../Core/Context/ViewerContext";
+import {
+  ViewerContext,
+  ViewerContextType,
+} from "../../Core/Context/ViewerContext";
 
 interface NodeButtonShowProps {
   object3D?: THREE.Object3D | null;

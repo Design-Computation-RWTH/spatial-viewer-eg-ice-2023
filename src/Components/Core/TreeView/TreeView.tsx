@@ -1,9 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ActionIcon, Group, Space } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { ViewerContextType } from "../../../../@types/viewerTypes";
 import * as Arborist from "react-arborist";
-import { ViewerContext } from "../Context/ViewerContext";
+import { ViewerContext, ViewerContextType } from "../Context/ViewerContext";
 import { NodeApi, NodeRendererProps } from "react-arborist";
 import { CaretDown, CaretRight } from "tabler-icons-react";
 import * as THREE from "three";
@@ -233,7 +232,6 @@ function FolderArrow({ node }: { node: NodeApi<TreeData> }) {
     <Group spacing="xs" style={{ gap: "0px" }}>
       {caret}
       <NodeButtonShow object3D={object} node={node} />
-      {/* <ActionIcon >{icon}</ActionIcon> */}
     </Group>
   );
 }

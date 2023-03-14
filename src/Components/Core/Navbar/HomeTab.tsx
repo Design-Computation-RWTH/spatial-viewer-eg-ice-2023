@@ -1,8 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { Button, FileButton, Group } from "@mantine/core";
 import * as IFC from "web-ifc-three/IFCLoader";
-import { ViewerContext } from "../Context/ViewerContext";
-import { ViewerContextType } from "../../../../@types/viewerTypes";
+import { ViewerContext, ViewerContextType } from "../Context/ViewerContext";
 import * as THREE from "three";
 import { useContext, useEffect, useState } from "react";
 

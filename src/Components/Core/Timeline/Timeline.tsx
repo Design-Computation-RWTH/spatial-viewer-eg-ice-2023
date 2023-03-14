@@ -1,22 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ReactNode, useContext, useEffect } from "react";
-import { ActionIcon, Group, Menu, Paper, Slider, Text } from "@mantine/core";
-import {
-  ArrowLeftRight,
-  CircleCheck,
-  Menu2,
-  MessageCircle,
-  Photo,
-  Reload,
-  Search,
-  Settings,
-  Trash,
-} from "tabler-icons-react";
+import { ActionIcon, Group, Paper, Slider } from "@mantine/core";
+import { CircleCheck, Reload } from "tabler-icons-react";
 import { showNotification, updateNotification } from "@mantine/notifications";
 import { generateUUID } from "three/src/math/MathUtils";
-import { ViewerContext } from "../Context/ViewerContext";
-import { ViewerContextType } from "../../../../@types/viewerTypes";
+import { ViewerContext, ViewerContextType } from "../Context/ViewerContext";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
+import { ViewerMenu } from "../../Menu/Menu";
 
 interface DatePercentage {
   value: number;
@@ -161,53 +151,9 @@ export function Timeline() {
   }
 
   return (
-    // <div
-    //   style={{
-    //     position: "relative",
-    //     width: "60%",
-    //     left: "0",
-    //     right: "0",
-    //     bottom: "12%",
-    //     marginLeft: "auto",
-    //     marginRight: "auto",
-    //   }}
-    // >
     <Paper withBorder shadow="xl" radius="lg" p="xl" color="grey">
       <Group spacing="xs" style={{ gap: "4px" }} grow>
-        <Menu shadow="md" width={200}>
-          <Menu.Target>
-            <ActionIcon color="blue" size="lg" radius="xl">
-              <Menu2 />
-            </ActionIcon>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Label>Application</Menu.Label>
-            <Menu.Item icon={<Settings size={14} />}>Settings</Menu.Item>
-            <Menu.Item icon={<MessageCircle size={14} />}>Messages</Menu.Item>
-            <Menu.Item icon={<Photo size={14} />}>Gallery</Menu.Item>
-            <Menu.Item
-              icon={<Search size={14} />}
-              rightSection={
-                <Text size="xs" color="dimmed">
-                  ⌘K
-                </Text>
-              }
-            >
-              Search
-            </Menu.Item>
-
-            <Menu.Divider />
-
-            <Menu.Label>Danger zone</Menu.Label>
-            <Menu.Item icon={<ArrowLeftRight size={14} />}>
-              Transfer my data
-            </Menu.Item>
-            <Menu.Item color="red" icon={<Trash size={14} />}>
-              Delete my account
-            </Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <ViewerMenu />
 
         <Slider
           style={{ minWidth: "70%", maxWidth: "80%", width: "70%" }}
@@ -223,6 +169,5 @@ export function Timeline() {
         </ActionIcon>
       </Group>
     </Paper>
-    // </div>
   );
 }
