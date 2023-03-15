@@ -16,6 +16,9 @@ import { showNotification, updateNotification } from "@mantine/notifications";
 import * as IFC from "web-ifc-three/IFCLoader";
 import { CircleCheck, Upload, Download } from "tabler-icons-react";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
+import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+import * as THREE from "three";
+import { generateUUID } from "three/src/math/MathUtils";
 
 export function DetailsTab() {
   const { selMesh, scene, reRenderViewer, setRenderTree } = useContext(
@@ -52,10 +55,10 @@ export function DetailsTab() {
 
   useEffect(() => {
     if (newDocument) {
+      const fileURL = URL.createObjectURL(newDocument);
       console.log("File Loaded");
       console.log(newDocument.name);
       if (newDocument.name.includes(".ifc")) {
-        const fileURL = URL.createObjectURL(newDocument);
         const ifcLoader = new IFC.IFCLoader();
         ifcLoader.ifcManager.setWasmPath("../../../");
         ifcLoader.load(fileURL, (ifcModel) => {
@@ -64,10 +67,26 @@ export function DetailsTab() {
           setRenderTree(ifcModel.id.toString());
           reRenderViewer();
         });
+      } else if (newDocument.name.includes(".ply")) {
+        loadPly(fileURL);
       }
     }
   }, [newDocument]);
 
+  async function loadPly(fileURL: string) {
+    const plyLoader = new PLYLoader();
+    const plyPoints = await plyLoader.loadAsync(fileURL);
+    const material = new THREE.PointsMaterial({
+      vertexColors: true,
+      size: 0.5,
+    });
+    let pointCloud = new THREE.Points(plyPoints, material);
+    pointCloud.name = newDocument.name;
+    scene.add(pointCloud);
+    console.log(pointCloud);
+    reRenderViewer();
+    setRenderTree(generateUUID);
+  }
   async function updateDocument(event) {
     if (selMesh) {
       showNotification({

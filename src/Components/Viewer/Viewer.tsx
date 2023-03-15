@@ -179,7 +179,6 @@ export const ViewerComponent = memo(() => {
 
   function onClick(event) {
     if (currentCamera) {
-      console.log(clickMode);
       if (clickMode === ClickMode.Select) {
         const canvas = event.target;
         const x = (event.offsetX / canvas.clientWidth) * 2 - 1;
@@ -190,7 +189,9 @@ export const ViewerComponent = memo(() => {
 
         // Casts a ray
         const intersection = raycaster.intersectObjects(
-          scene.children.filter((obj) => obj.type === "Mesh")
+          scene.children.filter(
+            (obj) => obj.type === "Mesh" || obj.type === "Points"
+          )
         );
 
         // Filter out ControlPlane if it is hit
@@ -210,8 +211,11 @@ export const ViewerComponent = memo(() => {
         orbit.enabled = false;
         raycaster.setFromCamera(mouse, currentCamera);
         const intersection = raycaster.intersectObjects(
-          scene.children.filter((obj) => obj.type === "Mesh")
+          scene.children.filter(
+            (obj) => obj.type === "Mesh" || obj.type === "Points"
+          )
         );
+        console.log(intersection);
         if (intersection.length > 0) {
           if (!drawingLine) {
             console.log(intersection);
@@ -271,7 +275,6 @@ export const ViewerComponent = memo(() => {
   }
 
   function onMouseMove(event) {
-    console.log("MOVE");
     if (clickMode === ClickMode.Measure) {
       event.preventDefault();
 
@@ -327,7 +330,6 @@ export const ViewerComponent = memo(() => {
     reRenderViewer();
   }
 
-  // return <div style={{ height: "100%" }} id="ifc-viewer-container"></div>;
   return (
     <div
       style={{

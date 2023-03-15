@@ -59,7 +59,7 @@ export function MyTreeView() {
   // Function for converting the scene graph to a tree for the tree view
   function convertToTree() {
     let sceneGraph = scene.children.filter(
-      (child) => child instanceof THREE.Mesh
+      (child) => child instanceof THREE.Mesh || child instanceof THREE.Points
     );
     let tree = {
       id: "Root",

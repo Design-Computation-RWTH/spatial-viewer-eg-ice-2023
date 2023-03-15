@@ -1,7 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { ActionIcon } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { GridDots, Lamp, Line, ThreeDCubeSphere } from "tabler-icons-react";
+import {
+  Cloud,
+  GridDots,
+  Lamp,
+  Line,
+  ThreeDCubeSphere,
+} from "tabler-icons-react";
 import * as THREE from "three";
 import {
   ViewerContext,
@@ -40,6 +46,7 @@ export function NodeButtonShow(props: NodeButtonShowProps) {
   }
   let icon;
   if (props.node.data.type === "Mesh") icon = <ThreeDCubeSphere />;
+  else if (props.node.data.type === "Points") icon = <Cloud />;
   else if (props.node.data.type === "GridHelper") icon = <GridDots />;
   else if (props.node.data.type === "DirectionalLight") icon = <Lamp />;
   else if (props.node.data.name === "Lighthelper") icon = <Lamp />;
