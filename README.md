@@ -16,8 +16,6 @@ The initial graph is located under [/storage/graphOriginal.tll](/storage/graphOr
 
 The queries used in this prototype are hosted under [/src/Misc/Queries.tsx](/src/Misc/Queries.tsx)
 
-# Cite As
-
 # Acknowledgement
 
 This research is part of the DFG SPP 2388 ”Hundert plus” project Raumlink and the Strategic Basic
