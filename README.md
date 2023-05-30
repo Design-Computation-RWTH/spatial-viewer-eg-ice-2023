@@ -4,9 +4,9 @@ This repository hosts a prototype for the EG-ICE 2023 paper "Towards Scene Graph
 
 # Getting Started
 
-1. Run **"npm install"** in the console or terminal (Don't use npm start, since this will not start all services!)
+1. Run **"npm install"** in the console or terminal 
 2. Make sure that Port 3000 and 3001 are free
-3. Run "npm run dev"
+3. Run "npm run dev" (Don't use npm start, since this will not start all services!)
 
 # Initial Scene Graph
 
