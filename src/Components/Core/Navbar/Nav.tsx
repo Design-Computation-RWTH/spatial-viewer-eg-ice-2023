@@ -16,14 +16,14 @@ export function CoreNavbar() {
         <Tabs.Tab value="details">
           <BinaryTree />
         </Tabs.Tab>
-        <Tabs.Tab
+        {/* <Tabs.Tab
           onClick={() => {
             console.log("settings");
           }}
           value="settings"
         >
           <Search />
-        </Tabs.Tab>
+        </Tabs.Tab> */}
       </Tabs.List>
 
       <Tabs.Panel
@@ -33,12 +33,12 @@ export function CoreNavbar() {
           width: "100%",
           height: "100%",
           maxWidth: "100%",
-          maxHeight: "100%"
+          maxHeight: "100%",
         }}
       >
         <DetailsTab />
       </Tabs.Panel>
-      <Tabs.Panel
+      {/* <Tabs.Panel
         value="settings"
         style={{
           paddingLeft: 10,
@@ -49,7 +49,7 @@ export function CoreNavbar() {
         }}
       >
         <SparqlTab />
-      </Tabs.Panel>
+      </Tabs.Panel> */}
     </Tabs>
   );
 }

@@ -1,14 +1,26 @@
 prefix sg: <http://example.org/scenegraph#>
 prefix ex: <http://example.org/ex#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dcterms: <http://purl.org/dc/terms/>
+prefix dcat: <http://www.w3.org/ns/dcat#>
+prefix prov: <http://www.w3.org/ns/prov#>
 
-ex:box1 a sg:SpatialActor ;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime.
 
-ex:transformBox1_1 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;
-    sg:targets  ex:box1;
+ex:file_1_spatial_actor a sg:SpatialActor;
+    dcterms:title "SeminarroomModel";
+    sg:hasRepresentation ex:file_1_v1_distribution .
+
+ex:file_1_v1_distribution a dcat:Distribution ;
+    dcat:downloadURL <http://localhost:3001/files/Seminarroom.ifc>  ;
+    prov:atTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
+    dcterms:mediaType "ifc" .
+
+ex:transformation_1_1 rdf:type sg:Transformation ;
+    prov:generatedAtTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
+    prov:atTime  "2023-02-24T12:32:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_1_spatial_actor ;
     sg:m1 1 ;
     sg:m2 0 ;
     sg:m3 0 ;
@@ -27,9 +39,10 @@ ex:transformBox1_1 rdf:type sg:Transformation;
     sg:m16 1 .
 
 
-ex:transformBox1_2 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:33:56"^^xsd:dateTime;
-    sg:targets  ex:box1;
+ex:transformation_1_2 rdf:type sg:Transformation ;
+    prov:generatedAtTime "2023-02-26T12:33:56"^^xsd:dateTime ;
+    prov:atTime "2023-02-26T12:33:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_1_spatial_actor ;
     sg:m1 1 ;
     sg:m2 0 ;
     sg:m3 0 ;
@@ -47,34 +60,49 @@ ex:transformBox1_2 rdf:type sg:Transformation;
     sg:m15 3 ;
     sg:m16 1 .
 
-ex:transformBox1_3 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:34:56"^^xsd:dateTime;
-    sg:targets  ex:box1;
-    sg:m1 1 ;
+ex:file_2_v1_distribution a dcat:Distribution ;
+    dcat:downloadURL <http://localhost:3001/files/Chair_1.png> ;
+    dcterms:mediaType <https://www.iana.org/assignments/media-types/image/png> .
+
+ex:file_2_spatial_actor a sg:SpatialActor;
+    dcterms:title       "SeminarroomPlan";
+    sg:hasRepresentation ex:file_2_v1_distribution .
+
+ex:transformation_2_1 rdf:type sg:Transformation ;
+    prov:generatedAtTime "2023-02-25T12:33:56"^^xsd:dateTime ;
+    prov:atTime "2023-02-25T12:33:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_2_spatial_actor ;
+    sg:hasParent ex:file_1_spatial_actor ;
+    sg:m1 0 ;
     sg:m2 0 ;
-    sg:m3 0 ;
+    sg:m3 "-0.010" ;
     sg:m4 0 ;
-    sg:m5 0 ;
-    sg:m6 1 ;
+    sg:m5 "-0.010" ;
+    sg:m6 0 ;
     sg:m7 0 ;
     sg:m8 0 ;
     sg:m9 0 ;
-    sg:m10 0 ;
-    sg:m11 1 ;
+    sg:m10 "0.010" ;
+    sg:m11 0 ;
     sg:m12 0 ;
-    sg:m13 1 ;
-    sg:m14 1 ;
-    sg:m15 1 ;
+    sg:m13 "11.816" ;
+    sg:m14 "-1.909" ;
+    sg:m15 "-51.934" ;
     sg:m16 1 .
 
-ex:box2 a sg:SpatialActor ;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime.
 
+ex:file_3_v1_distribution a dcat:Distribution ;
+    dcat:downloadURL <http://localhost:3001/files/SeminarroomScan.gltf> ;
+    dcterms:mediaType "gltf" .
 
-ex:transformBox2 rdf:type sg:Transformation;
-    sg:created  "2023-02-24T12:32:56"^^xsd:dateTime;
-    sg:targets  ex:box2;
-    sg:hasParent ex:box1 ;
+ex:file_3_spatial_actor a sg:SpatialActor;
+    dcterms:title       "SeminarroomScan";
+    sg:hasRepresentation ex:file_3_v1_distribution .
+
+ex:transformation_3_1 rdf:type sg:Transformation ;
+    prov:generatedAtTime "2023-02-25T12:33:56"^^xsd:dateTime ;
+    prov:atTime "2023-02-25T12:33:56"^^xsd:dateTime ;
+    sg:hasSpatialActor  ex:file_3_spatial_actor ;
     sg:m1 1 ;
     sg:m2 0 ;
     sg:m3 0 ;
@@ -87,7 +115,7 @@ ex:transformBox2 rdf:type sg:Transformation;
     sg:m10 0 ;
     sg:m11 1 ;
     sg:m12 0 ;
-    sg:m13 -2 ;
-    sg:m14 2 ;
-    sg:m15 -2 ;
+    sg:m13 0 ;
+    sg:m14 0 ;
+    sg:m15 0 ;
     sg:m16 1 .

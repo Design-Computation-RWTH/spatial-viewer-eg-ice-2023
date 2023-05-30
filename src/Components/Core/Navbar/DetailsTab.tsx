@@ -17,6 +17,7 @@ import * as IFC from "web-ifc-three/IFCLoader";
 import { CircleCheck, Upload, Download } from "tabler-icons-react";
 import { GraphContext, GraphContextType } from "../Context/GraphContext";
 import { PLYLoader } from "three/examples/jsm/loaders/PLYLoader";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as THREE from "three";
 import { generateUUID } from "three/src/math/MathUtils";
 
@@ -69,6 +70,18 @@ export function DetailsTab() {
         });
       } else if (newDocument.name.includes(".ply")) {
         loadPly(fileURL);
+      } else if (
+        newDocument.name.includes(".glb") ||
+        newDocument.name.includes(".gltf")
+      ) {
+        console.log("TestLog");
+        const gltfLoader = new GLTFLoader();
+        gltfLoader.load(fileURL, (gltfModel) => {
+          gltfModel.scene.name = newDocument.name;
+          scene.add(gltfModel.scene);
+          setRenderTree(gltfModel.scene.id.toString());
+          reRenderViewer();
+        });
       }
     }
   }, [newDocument]);

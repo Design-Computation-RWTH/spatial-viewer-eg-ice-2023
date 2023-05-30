@@ -190,7 +190,10 @@ export const ViewerComponent = memo(() => {
         // Casts a ray
         const intersection = raycaster.intersectObjects(
           scene.children.filter(
-            (obj) => obj.type === "Mesh" || obj.type === "Points"
+            (obj) =>
+              obj.type === "Mesh" ||
+              obj.type === "Points" ||
+              obj.type === "Group"
           )
         );
 

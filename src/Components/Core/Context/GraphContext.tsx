@@ -5,6 +5,7 @@ import * as oxigraph from "oxigraph";
 import { ViewerContext, ViewerContextType } from "./ViewerContext";
 import init from "oxigraph/web";
 import { generateUUID } from "three/src/math/MathUtils";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 import * as IFC from "web-ifc-three/IFCLoader";
 import {
   constructTransformMatrix,
@@ -300,6 +301,18 @@ const GraphProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       } else if (scene.getObjectByProperty("uuid", spatialActor)) {
         updateSceneObject(mesh, spatialActor, cleanResult, subject, filename);
       }
+    } else if (mediatype.includes("glb") || mediatype.includes("gltf")) {
+      // Download the ifc file and create a url for it
+      let gltf = await downloadFile(downloadURL);
+      const fileURL = URL.createObjectURL(gltf);
+      console.log("TestLog");
+      const gltfLoader = new GLTFLoader();
+      gltfLoader.load(fileURL, (gltfModel) => {
+        mesh = gltfModel.scene.children[0];
+        console.log("gltfModel", gltfModel);
+        updateSceneObject(mesh, spatialActor, cleanResult, subject, filename);
+      });
+      return;
     }
   }
 

@@ -1,16 +1,16 @@
 # Introduction
 
-This repository hosts a prototype for the EG-ICE 2023 paper "Towards Scene Graph Descriptions for Spatial Representations in the Built Environment"
+This repository hosts a prototype for the EG-ICE 2023 paper "Towards Scene Graph Descriptions for Spatial Representations in the Built Environment". It is built on a React web viewer using THREE.js and IFC.js and an Oxigraph Graph Service, storing the Graph in the local repository.
 
 # Getting Started
 
-1. Run "npm install" in the console or terminal
-2. Make sure that the Port 3000 is free
+1. Run **"npm install"** in the console or terminal (Don't use npm start, since this will not start all services!)
+2. Make sure that Port 3000 and 3001 are free
 3. Run "npm run dev"
 
 # Initial Scene Graph
 
-The initial graph is located under [/storage/graphOriginal.tll](/storage/graphOriginal.ttl)
+The initial graph is located under [/storage/graphOriginal.ttl](/storage/graphOriginal.ttl)
 
 # SPARQL Queries
 

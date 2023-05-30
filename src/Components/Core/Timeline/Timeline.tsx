@@ -153,10 +153,15 @@ export function Timeline() {
   return (
     <Paper withBorder shadow="xl" radius="lg" p="xl" color="grey">
       <Group spacing="xs" style={{ gap: "4px" }} grow>
-        <ViewerMenu />
+        {/* <ViewerMenu /> */}
 
         <Slider
-          style={{ minWidth: "70%", maxWidth: "80%", width: "70%" }}
+          style={{
+            minWidth: "70%",
+            maxWidth: "80%",
+            width: "70%",
+            paddingLeft: "10px",
+          }}
           size="xl"
           radius="xl"
           onChange={setSliderValue}
