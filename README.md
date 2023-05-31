@@ -18,5 +18,5 @@ The queries used in this prototype are hosted under [/src/Misc/Queries.tsx](/src
 
 # Acknowledgement
 
-This research is part of the DFG SPP 2388 ”Hundert plus” project Raumlink and the Strategic Basic
-Research grant (grant no. 1S99020N) of the Research Foundation Flanders (FWO).
+This research is funded by the Deutsche Forschungsgemeinschaft (DFG, German
+Research Foundation) – 501812634 and the Strategic Basic Research grant (grant no. 1S99020N) of the Research Foundation Flanders (FWO).
